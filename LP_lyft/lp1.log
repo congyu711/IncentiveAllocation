@@ -1,0 +1,23 @@
+
+Gurobi 9.5.2 (linux64, C++) logging started Thu Aug 11 15:49:34 2022
+
+Set parameter LogFile to value "lp1.log"
+Gurobi Optimizer version 9.5.2 build v9.5.2rc0 (linux64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 6 rows, 50 columns and 99 nonzeros
+Model fingerprint: 0xc35cdd97
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+02]
+  Objective range  [2e+00, 1e+02]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+02]
+Presolve removed 0 rows and 7 columns
+Presolve time: 0.00s
+Presolved: 6 rows, 43 columns, 85 nonzeros
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    4.5900000e+02   8.812500e+00   0.000000e+00      0s
+       1    4.0576000e+02   0.000000e+00   0.000000e+00      0s
+
+Solved in 1 iterations and 0.01 seconds (0.00 work units)
+Optimal objective  4.057600000e+02
