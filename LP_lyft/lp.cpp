@@ -57,6 +57,29 @@ int main()
         model.setObjective(obj,GRB_MAXIMIZE);
         model.optimize();
         cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+        double ans=0.0,cost=0.0;
+        for(int i=0;i<n;i++)
+        {
+            vector<pair<int,int>> non0;
+            for(int j=0;j<m;j++)
+            {
+                if(xs[i][j].get(GRB_DoubleAttr_X)!=0)
+                    non0.push_back(make_pair(j,xs[i][j].get(GRB_DoubleAttr_X)));
+            }
+            if(non0.size()==1)
+            {
+                ans+=v[i][non0[0].first];
+                cost+=c[i][non0[0].first];
+            }
+            else if(non0.size()==2)
+            {
+                // always use the small one
+                if(non0[0].second>non0[1].second)   swap(non0[0],non0[1]);
+                ans+=v[i][non0[0].first];
+                cost+=c[i][non0[0].first];
+            }
+        }
+        cout<<"ans: "<<ans<<"\ncost: "<<cost<<endl;
     }
     catch (GRBException e)
     {

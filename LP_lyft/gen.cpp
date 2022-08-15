@@ -13,7 +13,7 @@ int main()
     {
         for(int j=0;j<m;j++)
         {
-            fout<<gen()%100<<' ';
+            fout<<1+gen()%100<<' ';
         }
         fout<<endl;
     }
@@ -21,7 +21,7 @@ int main()
     {
         for(int j=0;j<m;j++)
         {
-            fout<<gen()%100<<' ';
+            fout<<1+gen()%100<<' ';
         }
         fout<<endl;
     }
