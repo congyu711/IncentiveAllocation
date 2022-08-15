@@ -30,6 +30,7 @@ int main()
 {
     int n, m, C;
     ifstream fin("data.in");
+    ofstream fout("lyft.out");
     fin >> n >> m >> C;
     vector<vector<obj>> objs(n, vector<obj>(m)), data(n, vector<obj>(m));
     for (int i = 0; i < n; i++)
@@ -71,7 +72,7 @@ int main()
         objs[k] = CH_Andrew(k, objs[k]);
         while (objs[k].back().v < objs[k].end()[-2].v)
             objs[k].pop_back();
-        // for(auto e:objs[k]) cout<<e.v<<' ' <<e.c <<endl;
+        // for(auto e:objs[k]) cout<<e.c<<' ' <<e.v <<endl;
         // cout<<endl;
     }
     // compute the LP dual opt
@@ -86,14 +87,17 @@ int main()
         for (int i = 0; i < objs[k].size() - 1; i++)
         {
             _l=(double)(objs[k][i].v-objs[k][i+1].v)/(double)(objs[k][i].c-objs[k][i+1].c);
-            if(_l>0)    bkpts[k].push_back(bkpoint(i+1,i,_l,-objs[k][i].c));
+            if(_l>=0)    bkpts[k].push_back(bkpoint(i+1,i,_l,-objs[k][i].c));
         }
         bkpts[k].push_back(bkpoint(-1,objs[k].size()-1,0.0,-objs[k].end()[-1].c));
         // for(auto e:bkpts[k])    cout<<e.lambda<<' '<<e.lobj<<' '<<e.robj<<' '<<e.rdiff<<endl;
         // cout<<endl;
     }
     // pair<int,int> --> first=line idx of vector<vector<bkpts>>; second=col number of vector<bkpts> 
-    auto cmp=[&](pair<int,int> a,pair<int,int> b){return bkpts[a.first][a.second].lambda<bkpts[b.first][b.second].lambda;};
+    auto cmp=[&](pair<int,int> a,pair<int,int> b){
+        if(bkpts[a.first][a.second].lambda==bkpts[b.first][b.second].lambda)
+            return objs[a.first][bkpts[a.first][a.second].robj].c<objs[b.first][bkpts[b.first][b.second].robj].c;
+        return bkpts[a.first][a.second].lambda<bkpts[b.first][b.second].lambda;};
     priority_queue<pair<int,int>,vector<pair<int,int> >,decltype(cmp)> pq(cmp);
     double CurrentSlope=C,L=0;
     vector<int> idxs(n,0);
@@ -108,13 +112,13 @@ int main()
             pq.push(make_pair(T.first,T.second+1));
             CurrentSlope-=bkpts[T.first][T.second].rdiff;
             CurrentSlope+=bkpts[T.first][T.second+1].rdiff;
-            if(CurrentSlope<=0) break;
+            if(CurrentSlope<0) break;
             idxs[T.first]++;
         }
     }
     cout<<"currentsolpe "<<CurrentSlope<<endl;
-    if(pq.size())   L=bkpts[pq.top().first][pq.top().second].lambda;
-    else L=0;
+    // if(pq.size())   L=bkpts[pq.top().first][pq.top().second].lambda;
+    // else L=0;
     double opt=0.0,cost=0.0;
     for(int i=0;i<n;i++)
     {
@@ -123,6 +127,8 @@ int main()
         // opt+=e.v-e.c*L;
         opt+=e.v;
         cost+=e.c;
+        fout<<e.c<<' '<<e.v<<endl;
+        fout<<endl;
     }
     cout<<"opt: "<<opt<<endl;
     cout<<"cost: "<<cost<<endl;
