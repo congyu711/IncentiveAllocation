@@ -61,7 +61,7 @@ int main()
         for (int i = 0; i < m; i++)
         {
             while (res.size() >= 2 && crossproduct(res.end()[-2], points[i], res.end()[-2],
-                                                   res.end()[-1]) > 0)
+                                                   res.end()[-1]) >= 0)
                 res.pop_back();
             res.push_back(points[i]);
         }

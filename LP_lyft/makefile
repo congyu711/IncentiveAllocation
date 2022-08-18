@@ -10,3 +10,6 @@ clean:
 
 gendata: gen.cpp
 	$(CCC) gen.cpp -o gen && ./gen
+
+lyft:
+	$(CCC) lyftmethod.cpp -o lyft -O3 && ./lyft
