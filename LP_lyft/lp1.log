@@ -121,3 +121,120 @@ Barrier solve interrupted - model solved by another algorithm
 Solved with dual simplex
 Solved in 173 iterations and 0.07 seconds (0.04 work units)
 Optimal objective  9.801111111e+03
+
+Gurobi 9.5.2 (linux64, C++) logging started Mon Sep  5 14:35:52 2022
+
+Set parameter LogFile to value "lp1.log"
+Gurobi Optimizer version 9.5.2 build v9.5.2rc0 (linux64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 6001 rows, 3000000 columns and 6000000 nonzeros
+Model fingerprint: 0x4ea23278
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+06]
+  Objective range  [1e+00, 1e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 5e+04]
+
+Concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Presolve removed 0 rows and 750 columns
+Presolve time: 7.56s
+Presolved: 6001 rows, 2999250 columns, 5998500 nonzeros
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 6.000e+03
+ Factor NZ  : 1.244e+04 (roughly 1.2 GB of memory)
+ Factor Ops : 3.430e+04 (less than 1 second per iteration)
+ Threads    : 4
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   2.37394581e+10  2.20744468e+09  1.94e+06 1.30e+06  8.67e+05     9s
+   1   1.01141501e+10  1.62124502e+09  7.53e+05 6.11e+05  3.40e+05     9s
+   2   2.24956207e+09  6.49593285e+08  8.30e+04 1.00e+05  3.84e+04    10s
+   3   1.35302009e+09  5.38907914e+08  1.47e+04 4.72e+04  6.82e+03    10s
+   4   1.19629789e+09  6.50716792e+08  6.76e+02 7.63e+03  2.58e+02    11s
+   5   1.13026548e+09  6.23601385e+08  5.04e+02 5.44e+03  1.90e+02    11s
+   6   1.10837713e+09  6.05159046e+08  4.62e+02 4.30e+03  1.76e+02    12s
+   7   1.09758450e+09  5.96370503e+08  4.43e+02 3.99e+03  1.71e+02    12s
+   8   1.09745262e+09  6.25902968e+08  4.43e+02 1.92e+03  1.63e+02    13s
+   9   1.09796445e+09  5.84070998e+08  4.42e+02 1.86e+03  1.77e+02    13s
+  10   1.08543856e+09  5.67569289e+08  4.18e+02 1.73e+03  1.71e+02    14s
+
+Barrier performed 10 iterations in 14.20 seconds (8.50 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+
+Solved with primal simplex
+Solved in 857 iterations and 14.33 seconds (6.34 work units)
+Optimal objective  2.944785984e+08
+
+Gurobi 9.5.2 (linux64, C++) logging started Mon Sep  5 14:39:16 2022
+
+Set parameter LogFile to value "lp1.log"
+Gurobi Optimizer version 9.5.2 build v9.5.2rc0 (linux64)
+Thread count: 6 physical cores, 12 logical processors, using up to 12 threads
+Optimize a model with 6001 rows, 1200000 columns and 2400000 nonzeros
+Model fingerprint: 0x32911e28
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+04]
+  Objective range  [1e+00, 1e+04]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+06]
+
+Concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Presolve removed 0 rows and 11928 columns
+Presolve time: 2.70s
+Presolved: 6001 rows, 1188072 columns, 2376144 nonzeros
+
+Ordering time: 0.00s
+
+Barrier statistics:
+ AA' NZ     : 6.000e+03
+ Factor NZ  : 1.244e+04 (roughly 500 MB of memory)
+ Factor Ops : 3.430e+04 (less than 1 second per iteration)
+ Threads    : 4
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   5.54039503e+09  2.22546527e+07  1.74e+07 7.69e+03  1.16e+05     3s
+   1   2.10238105e+09  4.49527141e+08  6.37e+06 2.86e+03  4.30e+04     3s
+   2   4.72610536e+07  5.40588507e+08  6.22e+04 0.00e+00  6.31e+02     4s
+   3   2.78144356e+07  3.03113411e+08  2.79e+02 2.48e-01  1.17e+02     4s
+   4   3.21297450e+07  2.09264457e+08  1.53e+02 0.00e+00  7.48e+01     4s
+   5   3.41779875e+07  1.65895428e+08  1.18e+02 0.00e+00  5.56e+01     4s
+   6   3.54832899e+07  1.36662981e+08  1.00e+02 0.00e+00  4.26e+01     4s
+   7   3.61162904e+07  1.22862216e+08  9.32e+01 0.00e+00  3.66e+01     5s
+   8   3.71711176e+07  1.14416260e+08  8.17e+01 0.00e+00  3.25e+01     5s
+   9   3.78834690e+07  1.04982601e+08  7.47e+01 0.00e+00  2.83e+01     5s
+  10   3.85810771e+07  9.96046720e+07  6.84e+01 0.00e+00  2.57e+01     5s
+  11   3.89350717e+07  9.41759146e+07  6.55e+01 0.00e+00  2.33e+01     6s
+  12   3.91732048e+07  8.88641945e+07  6.36e+01 0.00e+00  2.09e+01     6s
+  13   3.98239930e+07  8.52154090e+07  5.85e+01 0.00e+00  1.91e+01     6s
+  14   4.04644896e+07  8.25295325e+07  5.39e+01 0.00e+00  1.77e+01     6s
+  15   4.06116149e+07  7.88812453e+07  5.29e+01 0.00e+00  1.61e+01     7s
+  16   4.09651604e+07  7.73761223e+07  5.06e+01 0.00e+00  1.53e+01     7s
+  17   4.10697477e+07  7.75017762e+07  4.99e+01 0.00e+00  1.53e+01     7s
+  18   4.77886108e+07  7.47512773e+07  9.11e+00 4.87e-03  1.13e+01     7s
+  19   4.79728238e+07  7.23773469e+07  8.71e+00 7.28e-12  1.02e+01     8s
+  20   4.80647264e+07  7.09534766e+07  8.52e+00 2.91e-11  9.61e+00     8s
+  21   4.82446030e+07  6.95822477e+07  8.16e+00 2.91e-11  8.96e+00     8s
+  22   4.82721474e+07  7.15684436e+07  8.11e+00 7.28e-12  9.78e+00     9s
+  23   4.94927795e+07  6.78652389e+07  5.97e+00 7.28e-12  7.72e+00     9s
+  24   4.95820229e+07  6.67030123e+07  5.85e+00 1.09e-11  7.19e+00     9s
+  25   4.98608579e+07  6.60731675e+07  5.43e+00 1.09e-11  6.81e+00     9s
+  26   5.00149073e+07  6.55329257e+07  5.21e+00 1.09e-11  6.52e+00    10s
+  27   5.00459317e+07  6.62230366e+07  5.18e+00 1.46e-11  6.79e+00    10s
+
+Barrier performed 27 iterations in 9.72 seconds (5.99 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+
+Solved with primal simplex
+Solved in 91219 iterations and 9.73 seconds (5.43 work units)
+Optimal objective  5.815059711e+07

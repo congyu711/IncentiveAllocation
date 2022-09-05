@@ -1,15 +1,17 @@
 CCC = g++ 
-FLAGS = -g -Wall -Wextra 
+FLAGS = -O3
 GRBPATH = /home/congyu/gurobi952/
 
-build: lp.cpp 
+all: lp gen lyft
+
+lp: lp.cpp 
 	$(CCC) $(FLAGS) lp.cpp -o lp -I$(GRBPATH)/linux64/include -L$(GRBPATH)/linux64/lib -lgurobi_c++ -lgurobi95
 
 clean: 
-	rm lp gen
+	rm lp gen lyft
 
-gendata: gen.cpp
-	$(CCC) gen.cpp -o gen && ./gen
+gen: gen.cpp
+	$(CCC) gen.cpp -o gen $(FLAGS)
 
 lyft:
-	$(CCC) lyftmethod.cpp -o lyft -O3 && ./lyft
+	$(CCC) lyft.cpp -o lyft $(FLAGS)

@@ -1,19 +1,27 @@
 #include<bits/stdc++.h>
 using namespace std;
-
-int main()
+const int size = 1e4;
+int main(int argc, char **argv)
 {
     mt19937 gen(time(nullptr));
     ofstream fout("data.in");
-    int n,m,C;
-    cout<<"n m c\n";
-    cin>>n>>m>>C;
+    long long n,m,C;
+    if(argc==1)
+    {
+        cin>>n>>m>>C;
+    }
+    else
+    {
+        n=atoi(argv[1]);
+        m=atoi(argv[2]);
+        C=n*size*(0.2*gen()/gen.max());
+    }
     fout<<n<<' '<<m<<' '<<C<<endl;
     for(int i=0;i<n;i++)
     {
         for(int j=0;j<m;j++)
         {
-            fout<<1+gen()%100<<' ';
+            fout<<1+gen()%size<<' ';
         }
         fout<<endl;
     }
@@ -21,7 +29,7 @@ int main()
     {
         for(int j=0;j<m;j++)
         {
-            fout<<1+gen()%100<<' ';
+            fout<<1+gen()%size<<' ';
         }
         fout<<endl;
     }

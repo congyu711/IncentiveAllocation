@@ -3,7 +3,6 @@
  * @author congyu
  * @brief this is another method for the problem in
  * https://eng.lyft.com/how-to-solve-a-linear-optimization-problem-on-incentive-allocation-5a8fb5d04db1
- * read this(in Chinese) for more detail: https://congyu711.github.io/mip/2022/07/24/MIP.html
  * @date 2022-08-11
  *
  * @copyright Copyright (c) 2022
@@ -28,7 +27,7 @@ public:
 };
 int main()
 {
-    int n, m, C;
+    long long n, m, C;
     ifstream fin("data.in");
     ofstream fout("lyft.out");
     fin >> n >> m >> C;
@@ -46,7 +45,7 @@ int main()
     // preprocessing
     // for every group, draw every object(value,cost) on a 2D plane,
     // keep those objects lying on the bottom-right convex hull and delete others
-    auto crossproduct = [&](obj st1, obj ed1, obj st2, obj ed2) -> int
+    auto crossproduct = [&](obj st1, obj ed1, obj st2, obj ed2) -> long long
     { return (ed1.v - st1.v) * (ed2.c - st2.c) -
              (ed1.c - st1.c) * (ed2.v - st2.v); };
     auto CH_Andrew = [&](int k, vector<obj> &points) -> vector<obj>
