@@ -13,5 +13,5 @@ clean:
 gen: gen.cpp
 	$(CCC) gen.cpp -o gen $(FLAGS)
 
-lyft:
+lyft: lyft.cpp
 	$(CCC) lyft.cpp -o lyft $(FLAGS)

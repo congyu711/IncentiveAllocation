@@ -1,13 +1,4 @@
-/**
- * @file lyftmethod.cpp
- * @author congyu
- * @brief this is another method for the problem in
- * https://eng.lyft.com/how-to-solve-a-linear-optimization-problem-on-incentive-allocation-5a8fb5d04db1
- * @date 2022-08-11
- *
- * @copyright Copyright (c) 2022
- *
- */
+// for p>=2 ...
 #include <bits/stdc++.h>
 using namespace std;
 
