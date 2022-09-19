@@ -48,7 +48,7 @@ int main()
     auto crossproduct = [&](obj st1, obj ed1, obj st2, obj ed2) -> long long
     { return (ed1.v - st1.v) * (ed2.c - st2.c) -
              (ed1.c - st1.c) * (ed2.v - st2.v); };
-    auto CH_Andrew = [&](int k, vector<obj> &points) -> vector<obj>
+    auto CH_Andrew = [&](vector<obj> &points) -> vector<obj>
     {
         vector<obj> res;
         res.push_back(obj(0, 0, -1));
@@ -57,7 +57,7 @@ int main()
             if (fabs(a.c - b.c) < 1e-6)
                 return a.v < b.v;
             return a.c < b.c; });
-        for (int i = 0; i < m; i++)
+        for (int i = 0; i < points.size(); i++)
         {
             while (res.size() >= 2 && crossproduct(res.end()[-2], points[i], res.end()[-2],
                                                    res.end()[-1]) >= 0)
@@ -68,7 +68,7 @@ int main()
     };
     for (int k = 0; k < n; k++)
     {
-        objs[k] = CH_Andrew(k, objs[k]);
+        objs[k] = CH_Andrew(objs[k]);
         while (objs[k].back().v < objs[k].end()[-2].v)
             objs[k].pop_back();
         // for(auto e:objs[k]) cout<<e.c<<' ' <<e.v <<endl;

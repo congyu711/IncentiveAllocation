@@ -51,41 +51,41 @@ int main()
                 expr+=c[i][j]*xs[i][j];
                 obj+=v[i][j]*xs[i][j];
             }
-            model.addConstr(lin<=1);
+            model.addConstr(lin<=3);
         }
         model.addConstr(expr<=C);
         model.setObjective(obj,GRB_MAXIMIZE);
         model.optimize();
         cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
-        double ans=0.0,cost=0.0;
-        ofstream fout("lp.out");
-        for(int i=0;i<n;i++)
-        {
-            vector<int> non0;
-            for(int j=0;j<m;j++)
-            {
-                if(xs[i][j].get(GRB_DoubleAttr_X)!=0)
-                {    
-                    non0.push_back(j);
-                    fout<<c[i][j]<<' '<<v[i][j]<<'\n';
-                }
-            }
-            fout<<endl;
-            if(non0.size()==1)
-            {
-                if(xs[i][non0[0]].get(GRB_DoubleAttr_X)!=1)    continue;
-                ans+=v[i][non0[0]];
-                cost+=c[i][non0[0]];
-            }
-            else if(non0.size()==2)
-            {
-                // always use the small one
-                if(c[i][non0[0]]>c[i][non0[1]])   swap(non0[0],non0[1]);
-                ans+=v[i][non0[0]];
-                cost+=c[i][non0[0]];
-            }
-        }
-        cout<<"ans: "<<ans<<"\ncost: "<<cost<<endl;
+        // double ans=0.0,cost=0.0;
+        // ofstream fout("lp.out");
+        // for(int i=0;i<n;i++)
+        // {
+        //     vector<int> non0;
+        //     for(int j=0;j<m;j++)
+        //     {
+        //         if(xs[i][j].get(GRB_DoubleAttr_X)!=0)
+        //         {    
+        //             non0.push_back(j);
+        //             fout<<c[i][j]<<' '<<v[i][j]<<'\n';
+        //         }
+        //     }
+        //     fout<<endl;
+        //     if(non0.size()==1)
+        //     {
+        //         if(xs[i][non0[0]].get(GRB_DoubleAttr_X)!=1)    continue;
+        //         ans+=v[i][non0[0]];
+        //         cost+=c[i][non0[0]];
+        //     }
+        //     else if(non0.size()==2)
+        //     {
+        //         // always use the small one
+        //         if(c[i][non0[0]]>c[i][non0[1]])   swap(non0[0],non0[1]);
+        //         ans+=v[i][non0[0]];
+        //         cost+=c[i][non0[0]];
+        //     }
+        // }
+        // cout<<"ans: "<<ans<<"\ncost: "<<cost<<endl;
     }
     catch (GRBException e)
     {
