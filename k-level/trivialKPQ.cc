@@ -4,6 +4,7 @@
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
 
+#define RANGE_MAX 9999
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -21,7 +22,7 @@ public:
 };
 inline double getx(const line &_l1, const line &_l2)
 {
-    if(fabs(_l1.a-_l2.a)<1e-5)  return 20000;
+    if(fabs(_l1.a-_l2.a)<1e-5)  return RANGE_MAX;
     return (double)(_l1.b-_l2.b)/(_l1.a-_l2.a);
 }
 class breakpoint
@@ -58,7 +59,7 @@ public:
     // maintain nextTop and nextT
     virtual void _maintain();
     trivialKPQ(type _t):t(_t),nextT(-1*_t),top(-1),nextTop(-1),fin(false){}
-    trivialKPQ():trivialKPQ(-9999){}
+    trivialKPQ():trivialKPQ(-RANGE_MAX){}
 };
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_maintain()
@@ -72,7 +73,7 @@ void trivialKPQ<type,cmp>::_maintain()
     {
         if(e==top)  continue;
         auto x=getx(lines[top],lines[e]);
-        if(x>t&&x<10000)
+        if(x>t&&x<RANGE_MAX)
         {
             fin=0;
             if(x<nextT)
@@ -93,7 +94,7 @@ void trivialKPQ<type,cmp>::_advance()
     // find nextT and nextTop
     // O(S.size)
     _maintain();
-    if(fin) nextT=20000,nextTop=-1;
+    if(fin) nextT=RANGE_MAX+RANGE_MAX,nextTop=-1;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)
@@ -115,7 +116,7 @@ void trivialKPQ<type,cmp>::_delete(int l)
 {
     fin=0;
     S.erase(l);
-    nextT=9999;
+    nextT=RANGE_MAX;
     // change top
     if(top==l)
     {

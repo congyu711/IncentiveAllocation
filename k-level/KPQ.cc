@@ -25,7 +25,7 @@ public:
     kineticPriorityQueue(int sz):trivialKPQ<type,cmp>(){
         r=ceil(log((double)sz));
         subKPQs.resize(r,nullptr);
-        Q=trivialKPQ<type,cmp>(-9999);
+        Q=trivialKPQ<type,cmp>(-RANGE_MAX);
         if(sz<50)
         {
             for(int i=0;i<r;i++)
@@ -67,6 +67,11 @@ template<class type,class cmp>
 void kineticPriorityQueue<type,cmp>::_advance()
 {
     this->t=this->nextT;
+    if(this->t>=RANGE_MAX)
+    {
+        this->fin=true;
+        return;
+    }
     // if(pq.empty())  return false;
     // auto p=pq.top().second;
     type nxt=1e9;
@@ -83,7 +88,7 @@ void kineticPriorityQueue<type,cmp>::_advance()
         }
     }
     if(p==-1)
-        cerr<<"bad\n";
+        cerr<<"error!???\n";
     if(subKPQs[p]!=nullptr&&this->t==subKPQs[p]->nextT)
     {
         auto pmin=subKPQs[p]->top;
@@ -143,6 +148,7 @@ int main()
     fin.ignore(numeric_limits<streamsize>::max(),'\n');
     int n;
     fin>>n;
+    vector<int> res;
     // int k=n*0.2;
     int a,b;
     kineticPriorityQueue<double,less<double>> kpq(n);
@@ -152,31 +158,15 @@ int main()
         lines.push_back(line(a,b));
         kpq._insert(i);
     }
-    cout<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<endl;
-    for(auto e:kpq.subKPQs)
-    {
-        cout<<"top "<<e->top<<" | nextT "<<e->nextT<<'\n';
-    }
+    res.push_back(kpq.top);
 
-    while(1)
+    while (kpq.fin==false)
     {
         kpq._advance();
-        cout<<"t    nextT       top\n";
-        cout<<"kpq: "<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<'\n';
-        cout<<"Q:   " << kpq.Q.t<<' '<<kpq.Q.nextT<<' '<<kpq.Q.top<<"\n";
-        for(auto e:kpq.subKPQs)
-        {
-            cout<<e->t<<' '<<e->nextT<<' '<<e->top<<" "<<e->nextTop<<endl;
-        }
-        cout<<endl;
-        char a;
-        a=getchar();
+        // if(kpq.t>=RANGE_MAX)  break;
+        res.push_back(kpq.top);
     }
-    
-    // while (kpq.fin==false)
-    // {
-    //     kpq._advance();
-    //     cout<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<endl;
-    // }
-    
+    auto it=unique(res.begin(),res.end());
+    res.erase(it,res.end());
+    for(auto e:res) cout<<e<<' ';cout<<endl;
 }
