@@ -1,41 +1,19 @@
 #include<bits/stdc++.h>
+#include<boost/heap/binomial_heap.hpp>
 using namespace std;
-template<typename T>
-class b
-{
-public:
-    vector<int> c;
-    virtual void foo();
-    
-};
-template<typename T>
-void b<T>::foo()
-{
-    cout<<"old\n";
-}
-
-
-template<typename T>
-class a : public b<T>
-{
-public:
-    void foo();
-};
-template<typename T>
-void a<T>::foo()
-{
-    b<T>::c.push_back(1);
-    this->c.push_back(1);
-    cout<<"yes\n";
-}
+template<class T>
+class biheap=boost::heap::binomial_heap<pair<T,int>,boost::heap::compare<std::greater<pair<T,int>>>> ;
 
 int main()
 {
-    b<int>* p=new(a<int>);
-    p->foo();
-    cout<<p->c.size()<<endl;
-    for(int i=1;i<=100;i++)
+    vector<boost::heap::binomial_heap<pair<double,int>,boost::heap::compare<std::greater<pair<double,int>>>>::handle_type> vec(10);
+    for(int i=0;i<10;i++)
     {
-        cout<<i<<' '<<ceil(log((double)i))<<endl;
+        vec[i]=h.push(make_pair(i+1.23,i));
     }
+    // auto p=h.push(make_pair(91.99,123));
+    cout<<h.top().first<<endl;
+    h.update(vec[9],make_pair(80.01,111));
+    cout<<h.top().first<<endl;
+    // h.decrease(vec[9],make_pair(4.0,0));
 }
