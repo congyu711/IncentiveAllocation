@@ -1,3 +1,9 @@
+// kinetic priority queue
+// this is the divide-and-conquer version
+
+// https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
+// section 2.2
+
 #include"trivialKPQ.cc"
 #include<boost/heap/priority_queue.hpp>
 using namespace std;
@@ -12,19 +18,19 @@ public:
     vector<trivialKPQ<type,cmp>*> subKPQs;
     unordered_map<int,int> mp;  // l is in subkpq No.mp[l]
     int r;  // r=ceil(log n)
-    bool _maintain();
-    bool _advance();
+    void _maintain();
+    void _advance();
     void _insert(int);
     void _delete(int);
-    kineticPriorityQueue(int sz){
+    kineticPriorityQueue(int sz):trivialKPQ<type,cmp>(){
         r=ceil(log((double)sz));
-        subKPQs.resize(r+1,nullptr);
-        trivialKPQ<type,cmp>(-9999);
+        subKPQs.resize(r,nullptr);
+        Q=trivialKPQ<type,cmp>(-9999);
         if(sz<50)
         {
             for(int i=0;i<r;i++)
             {
-                subKPQs[i]=new trivialKPQ<type,cmp>;
+                subKPQs[i]=new trivialKPQ<type,cmp>();
             }
         }
         else
@@ -38,7 +44,7 @@ public:
 };
 
 template<class type,class cmp>
-bool kineticPriorityQueue<type,cmp>::_maintain()
+void kineticPriorityQueue<type,cmp>::_maintain()
 {
     this->top=Q.top;
     type nxt=1e9;
@@ -56,10 +62,9 @@ bool kineticPriorityQueue<type,cmp>::_maintain()
     }
     this->nextT=min(Q.nextT,nxt);
     // this->nextT=min(Q.nextT,pq.top().first);
-    return true;
 }
 template<class type,class cmp>
-bool kineticPriorityQueue<type,cmp>::_advance()
+void kineticPriorityQueue<type,cmp>::_advance()
 {
     this->t=this->nextT;
     // if(pq.empty())  return false;
@@ -68,7 +73,7 @@ bool kineticPriorityQueue<type,cmp>::_advance()
     int p=-1;
     for(int i=0;i<r;i++)
     {
-        if(subKPQs[i]!=nullptr&&subKPQs[i]->fin==false)
+        if(subKPQs[i]!=nullptr&&subKPQs[i]->S.size())
         {
             if(nxt>subKPQs[i]->nextT)
             {
@@ -78,11 +83,7 @@ bool kineticPriorityQueue<type,cmp>::_advance()
         }
     }
     if(p==-1)
-    {
-        cerr<<"/have no subkpqs or all subkpqs finished\n";
-        this->fin=true;
-        return false;
-    }
+        cerr<<"bad\n";
     if(subKPQs[p]!=nullptr&&this->t==subKPQs[p]->nextT)
     {
         auto pmin=subKPQs[p]->top;
@@ -96,7 +97,7 @@ bool kineticPriorityQueue<type,cmp>::_advance()
     }
     else if(this->t==Q.nextT)
         Q._advance();
-    return _maintain();
+    _maintain();
 }
 template<class type,class cmp>
 void kineticPriorityQueue<type,cmp>::_insert(int l)
@@ -119,7 +120,8 @@ void kineticPriorityQueue<type,cmp>::_insert(int l)
         }
     }
     mp.insert(make_pair(l,p));
-    Q._delete(subKPQs[p]->top);
+    if(subKPQs[p]->S.size())
+        Q._delete(subKPQs[p]->top);
     subKPQs[p]->_insert(l);
     Q._insert(subKPQs[p]->top);
     _maintain();
@@ -131,18 +133,19 @@ void kineticPriorityQueue<type,cmp>::_delete(int l)
     auto P=subKPQs[mp[l]];
     Q._delete(P->top);
     P->_delete(l);
+    mp.erase(l);
     Q._insert(P->top);
     _maintain();
 }
 int main()
 {
-    ifstream fin("data.in");
+    ifstream fin("/home/congyu/mip/k-level/data.in");
     fin.ignore(numeric_limits<streamsize>::max(),'\n');
     int n;
     fin>>n;
     // int k=n*0.2;
     int a,b;
-    kineticPriorityQueue<double,less<double>> kpq(20);
+    kineticPriorityQueue<double,less<double>> kpq(n);
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
@@ -150,10 +153,30 @@ int main()
         kpq._insert(i);
     }
     cout<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<endl;
-    while (kpq.fin==false)
+    for(auto e:kpq.subKPQs)
+    {
+        cout<<"top "<<e->top<<" | nextT "<<e->nextT<<'\n';
+    }
+
+    while(1)
     {
         kpq._advance();
-        cout<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<endl;
+        cout<<"t    nextT       top\n";
+        cout<<"kpq: "<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<'\n';
+        cout<<"Q:   " << kpq.Q.t<<' '<<kpq.Q.nextT<<' '<<kpq.Q.top<<"\n";
+        for(auto e:kpq.subKPQs)
+        {
+            cout<<e->t<<' '<<e->nextT<<' '<<e->top<<" "<<e->nextTop<<endl;
+        }
+        cout<<endl;
+        char a;
+        a=getchar();
     }
+    
+    // while (kpq.fin==false)
+    // {
+    //     kpq._advance();
+    //     cout<<kpq.t<<' '<<kpq.nextT<<' '<<kpq.top<<endl;
+    // }
     
 }

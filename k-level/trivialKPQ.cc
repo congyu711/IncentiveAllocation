@@ -21,6 +21,7 @@ public:
 };
 inline double getx(const line &_l1, const line &_l2)
 {
+    if(fabs(_l1.a-_l2.a)<1e-5)  return 20000;
     return (double)(_l1.b-_l2.b)/(_l1.a-_l2.a);
 }
 class breakpoint
@@ -41,7 +42,7 @@ public:
 };
 // store all lines
 vector<line> lines;
-template<class type=double,class cmp=less<type>>
+template<class type,class cmp>
 class trivialKPQ
 {
 public:
@@ -51,16 +52,16 @@ public:
     int top,nextTop;
     // int _top();
     // type _getnextT();
-    virtual bool _advance();
+    virtual void _advance();
     virtual void _insert(int);
     virtual void _delete(int);
     // maintain nextTop and nextT
-    virtual bool _maintain();
+    virtual void _maintain();
     trivialKPQ(type _t):t(_t),nextT(-1*_t),top(-1),nextTop(-1),fin(false){}
     trivialKPQ():trivialKPQ(-9999){}
 };
 template<class type,class cmp>
-bool trivialKPQ<type,cmp>::_maintain()
+void trivialKPQ<type,cmp>::_maintain()
 {
     fin=1;
     auto nt=nextT;
@@ -69,29 +70,35 @@ bool trivialKPQ<type,cmp>::_maintain()
     nextT=getx(lines[top],lines[nextTop]);
     for(auto e:S)
     {
+        if(e==top)  continue;
         auto x=getx(lines[top],lines[e]);
-        if(x>t&&x<nextT)
+        if(x>t&&x<10000)
         {
             fin=0;
-            nextT=x;
-            nextTop=e;
+            if(x<nextT)
+            {
+                nextT=x;
+                nextTop=e;
+            }
         }
     }
+    // if(fin==1) then currently new top won't appear;
     if(fin)  {nextT=nt,nextTop=ntp;}
-    return fin;
 }
 template<class type,class cmp>
-bool trivialKPQ<type,cmp>::_advance()
+void trivialKPQ<type,cmp>::_advance()
 {
     t=nextT;
     top=nextTop;
     // find nextT and nextTop
     // O(S.size)
-    return _maintain();
+    _maintain();
+    if(fin) nextT=20000,nextTop=-1;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)
 {
+    fin=0;
     S.insert(l);
     // change top
     if(S.size()<2)
@@ -106,11 +113,12 @@ void trivialKPQ<type,cmp>::_insert(int l)
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_delete(int l)
 {
+    fin=0;
     S.erase(l);
+    nextT=9999;
     // change top
     if(top==l)
     {
-        auto y=lines[*S.begin()].gety(t);
         top=*S.begin();
         for(auto e:S)
         {
@@ -118,7 +126,7 @@ void trivialKPQ<type,cmp>::_delete(int l)
                 top=e;
         }
     }
-    _maintain();
+    if(S.size())    _maintain();
 }
 // int main()
 // {
