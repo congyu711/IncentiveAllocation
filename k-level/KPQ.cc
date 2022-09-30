@@ -3,7 +3,10 @@
 
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
-
+// TODO 
+// when some subKPQ finishes during advance, subKPQ.nextT won't change which 
+// causes boost/heap can't get subkpqs with smallest nextT;
+// need to change both KPQ and trivialKPQ advance() operation behaviors;
 #include"trivialKPQ.cc"
 #include<boost/heap/binomial_heap.hpp>
 using namespace std;
@@ -67,50 +70,17 @@ template<class type,class cmp, class binomialHeap>
 void kineticPriorityQueue<type,cmp,binomialHeap>::_maintain()
 {
     this->top=Q.top;
-    // type nxt=1e9;
-    // int minp=-1;
-    // for(int i=0;i<r;i++)
-    // {
-    //     if(subKPQs[i]!=nullptr)
-    //     {
-    //         if(nxt>subKPQs[i]->nextT)
-    //         {
-    //             nxt=subKPQs[i]->nextT;
-    //             minp=i;
-    //         }
-    //     }
-    // }
     type nxt=pq.top().first;
-    this->nextT=min(Q.nextT,nxt);
-    // this->nextT=min(Q.nextT,pq.top().first);
+    if(min(Q.nextT,nxt)==this->nextT)   this->nextT=RANGE_MAX,this->nextTop=-1;
+    else    this->nextT=min(Q.nextT,nxt);
 }
 template<class type,class cmp, class binomialHeap>
 void kineticPriorityQueue<type,cmp,binomialHeap>::_advance()
 {
     this->t=this->nextT;
-    if(this->t>=RANGE_MAX)
-    {
-        this->fin=true;
-        return;
-    }
-    // type nxt=1e9;
-    // int p=-1;
-    // for(int i=0;i<r;i++)
-    // {
-    //     if(subKPQs[i]!=nullptr&&subKPQs[i]->S.size())
-    //     {
-    //         if(nxt>subKPQs[i]->nextT)
-    //         {
-    //             nxt=subKPQs[i]->nextT;
-    //             p=i;
-    //         }
-    //     }
-    // }
     type nxt=pq.top().first;
     int p=pq.top().second;
-    if(p==-1)
-        cerr<<"error!???\n";
-    if(subKPQs[p]!=nullptr&&this->t==subKPQs[p]->nextT)
+    if(this->t==subKPQs[p]->nextT)
     {
         auto pmin=subKPQs[p]->top;
         subKPQs[p]->_advance();
@@ -118,6 +88,8 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_advance()
         auto nextpmin=subKPQs[p]->top;
         if(pmin!=nextpmin)
         {
+            Q.t=this->t;
+            Q._maintain();
             Q._delete(pmin);
             Q._insert(nextpmin);
         }
@@ -183,9 +155,10 @@ int main()
         kpq._insert(i);
     }
     res.push_back(kpq.top);
-
-    while (kpq.fin==false)
+    auto pre_t=-1;
+    while (pre_t!=kpq.t)
     {
+        pre_t=kpq.t;
         kpq._advance();
         // if(kpq.t>=RANGE_MAX)  break;
         res.push_back(kpq.top);

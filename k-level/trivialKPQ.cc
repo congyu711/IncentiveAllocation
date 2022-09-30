@@ -1,5 +1,5 @@
 // kinetic priority queue
-// this is the divide-and-conquer version
+// trivial version
 
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
@@ -65,10 +65,8 @@ template<class type,class cmp>
 void trivialKPQ<type,cmp>::_maintain()
 {
     fin=1;
-    auto nt=nextT;
-    auto ntp=nextTop;
-    nextTop=*S.begin();
-    nextT=getx(lines[top],lines[nextTop]);
+    int ntp=-1;
+    type nt=RANGE_MAX;
     for(auto e:S)
     {
         if(e==top)  continue;
@@ -76,15 +74,12 @@ void trivialKPQ<type,cmp>::_maintain()
         if(x>t&&x<RANGE_MAX)
         {
             fin=0;
-            if(x<nextT)
-            {
-                nextT=x;
-                nextTop=e;
-            }
+            if(nt>x)    nt=x,ntp=e;
         }
     }
-    // if(fin==1) then currently new top won't appear;
-    if(fin)  {nextT=nt,nextTop=ntp;}
+    if(nt>t&&nt<RANGE_MAX)  nextT=nt,nextTop=ntp;
+    // if(fin==1) then there is no breakpoint right to t;
+    if(fin) nextT=RANGE_MAX,nextTop=-1;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_advance()
@@ -94,7 +89,6 @@ void trivialKPQ<type,cmp>::_advance()
     // find nextT and nextTop
     // O(S.size)
     _maintain();
-    if(fin) nextT=RANGE_MAX+RANGE_MAX,nextTop=-1;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)

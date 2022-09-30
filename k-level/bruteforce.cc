@@ -32,11 +32,13 @@ int main()
     fin>>n;
     int k=1;
     vector<line> lines;
+    vector<int> idxs;
     int a,b;
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
         lines.push_back(line(a,b));
+        idxs.push_back(i);
     }
     vector<breakpoint> points;
     for(int i=0;i<n;i++)
@@ -46,15 +48,20 @@ int main()
             points.push_back(breakpoint(lines[i],lines[j]));
         }
     }
+    vector<int> ans;
     vector<vector<line>> res(points.size()-1);
     sort(points.begin(),points.end());
     for(int i=0;i<points.size()-1;i++)
     {
         double x=(points[i].x+points[i+1].x)/2.0;
-        sort(lines.begin(),lines.end(),[&](line &l1,line &l2)->bool{return l1.a*x-l1.b>l2.a*x-l2.b;});
+        sort(idxs.begin(),idxs.end(),[&](int l1,int l2)->bool{return lines[l1].a*x-lines[l1].b<lines[l2].a*x-lines[l2].b;});
         for(int j=0;j<k;j++)
         {
             res[i].push_back(lines[j]);
         }
+        ans.push_back(idxs[0]);
     }
+    auto it=unique(ans.begin(),ans.end());
+    ans.erase(it,ans.end());
+    for(auto e:ans) cout<<e<<' ';cout<<endl;
 }
