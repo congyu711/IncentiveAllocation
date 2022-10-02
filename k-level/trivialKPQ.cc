@@ -4,7 +4,7 @@
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
 
-#define RANGE_MAX 9999
+#define RANGE_MAX 100000000
 #include<bits/stdc++.h>
 using namespace std;
 

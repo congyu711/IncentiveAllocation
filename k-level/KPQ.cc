@@ -3,31 +3,9 @@
 
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
-// TODO 
-// when some subKPQ finishes during advance, subKPQ.nextT won't change which 
-// causes boost/heap can't get subkpqs with smallest nextT;
-// need to change both KPQ and trivialKPQ advance() operation behaviors;
 #include"trivialKPQ.cc"
 #include<boost/heap/binomial_heap.hpp>
 using namespace std;
-// I need to overload operator+ and operator- for std::pair<T,int>
-// template<class type>
-// inline const pair<type,int> operator+(const pair<type,int> &p1,const pair<type,int> &p2)
-// {
-//     pair<type,int> res;
-//     res.first=p1.first+p2.first;
-//     res.second=p1.second+p2.second;
-//     return res;
-// }
-// template<class type>
-// inline const pair<type,int> operator-(const pair<type,int> &p1,const pair<type,int> &p2)
-// {
-//     pair<type,int> res;
-//     res.first=p1.first-p2.first;
-//     res.second=p1.second-p2.second;
-//     return res;
-// }
-// actually... I don't need this currently.
 template<class type,class cmp, class binomialHeap=boost::heap::binomial_heap<pair<type,int>,boost::heap::compare<std::greater<pair<type,int>>>>>
 class kineticPriorityQueue: public trivialKPQ<type,cmp>
 {
@@ -71,8 +49,8 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_maintain()
 {
     this->top=Q.top;
     type nxt=pq.top().first;
-    if(min(Q.nextT,nxt)==this->nextT)   this->nextT=RANGE_MAX,this->nextTop=-1;
-    else    this->nextT=min(Q.nextT,nxt);
+    // if(min(Q.nextT,nxt)==this->nextT)   this->nextT=RANGE_MAX,this->nextTop=-1;
+    this->nextT=min(Q.nextT,nxt);
 }
 template<class type,class cmp, class binomialHeap>
 void kineticPriorityQueue<type,cmp,binomialHeap>::_advance()
@@ -107,11 +85,6 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_insert(int l)
     int p=-1,maxpsize=0x07fffffff;
     for(int i=0;i<r;i++)
     {
-        if(subKPQs[i]==nullptr)
-        {
-            p=i,maxpsize=0;
-            break;
-        }
         if(maxpsize>subKPQs[i]->S.size())
         {
             maxpsize=subKPQs[i]->S.size();
@@ -140,7 +113,7 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_delete(int l)
 }
 int main()
 {
-    ifstream fin("/home/congyu/mip/k-level/data.in");
+    ifstream fin("/home/congyu/IncentiveAllocation/k-level/data.in");
     fin.ignore(numeric_limits<streamsize>::max(),'\n');
     int n;
     fin>>n;
@@ -156,7 +129,7 @@ int main()
     }
     res.push_back(kpq.top);
     auto pre_t=-1;
-    while (pre_t!=kpq.t)
+    while (kpq.t!=RANGE_MAX)
     {
         pre_t=kpq.t;
         kpq._advance();
