@@ -10,8 +10,6 @@ template<class type,class cmp, class binomialHeap=boost::heap::binomial_heap<pai
 class kineticPriorityQueue: public trivialKPQ<type,cmp>
 {
 public:
-    // priority_queue<pair<type,int>> pq;  // this is not completely correct.
-    // typedef typename boost::heap::binomial_heap<pair<type,int>,boost::heap::compare<std::greater<pair<type,int>>>> binomialHeap;
     binomialHeap pq;
     vector<typename binomialHeap::handle_type> pq_handlers;
     trivialKPQ<type,cmp> Q;

@@ -58,6 +58,7 @@ public:
     virtual void _delete(int);
     // maintain nextTop and nextT
     virtual void _maintain();
+    bool compare(const int,const int);
     trivialKPQ(type _t):t(_t),nextT(-1*_t),top(-1),nextTop(-1),fin(false){}
     trivialKPQ():trivialKPQ(-RANGE_MAX){}
 };
@@ -91,6 +92,13 @@ void trivialKPQ<type,cmp>::_advance()
     _maintain();
 }
 template<class type,class cmp>
+bool trivialKPQ<type,cmp>::compare(const int a,const int b)
+{
+    if(lines[a].gety(t)==lines[b].gety(t))
+        return cmp()(lines[a].a,lines[b].a);
+    return cmp()(lines[a].gety(t),lines[b].gety(t));
+}
+template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)
 {
     fin=0;
@@ -101,7 +109,7 @@ void trivialKPQ<type,cmp>::_insert(int l)
         top=l;
         return;
     }
-    if(cmp()(lines[l].gety(t),lines[top].gety(t)))
+    if(compare(l,top))
         top=l;
     _maintain();
 }
