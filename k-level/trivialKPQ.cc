@@ -41,8 +41,13 @@ public:
         return x<b.x;
     }
 };
-// store all lines
+
+/////////////////////////////////////////////////
+// store all lines. KPQ use indices of lines 
+// based on this vector.
 vector<line> lines;
+/////////////////////////////////////////////////
+
 template<class type,class cmp>
 class trivialKPQ
 {

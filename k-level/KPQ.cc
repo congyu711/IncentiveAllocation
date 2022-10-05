@@ -136,5 +136,5 @@ int main()
     }
     auto it=unique(res.begin(),res.end());
     res.erase(it,res.end());
-    for(auto e:res) cout<<e<<' ';cout<<endl;
+    for(auto e:res) cout<<lines[e].a<<' '<<lines[e].b<<'\n';
 }
