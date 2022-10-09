@@ -20,23 +20,24 @@ public:
     void _advance();
     void _insert(int);
     void _delete(int);
-    kineticPriorityQueue(int sz):trivialKPQ<type,cmp>(){
+    kineticPriorityQueue(int sz, vector<line>* p){
+        this->lines=p;
         r=ceil(log((double)sz));
         subKPQs.resize(r,nullptr);
         for(int i=0;i<r;i++)    pq_handlers.push_back(pq.push(make_pair(RANGE_MAX,i)));
-        Q=trivialKPQ<type,cmp>(-RANGE_MAX);
+        Q=trivialKPQ<type,cmp>(p);
         if(sz<50)
         {
             for(int i=0;i<r;i++)
             {
-                subKPQs[i]=new trivialKPQ<type,cmp>();
+                subKPQs[i]=new trivialKPQ<type,cmp>(p);
             }
         }
         else
         {
             for(int i=0;i<r;i++)
             {
-                subKPQs[i]=new kineticPriorityQueue<type,cmp,binomialHeap>(ceil(1.0*sz/r));
+                subKPQs[i]=new kineticPriorityQueue<type,cmp,binomialHeap>(ceil(1.0*sz/r),p);
             }
         }
     }
@@ -109,6 +110,8 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_delete(int l)
     Q._insert(P->top);
     _maintain();
 }
+#define __TEST__
+#ifdef __TEST__
 int main()
 {
     ifstream fin("/home/congyu/IncentiveAllocation/k-level/data.in");
@@ -118,7 +121,7 @@ int main()
     vector<int> res;
     // int k=n*0.2;
     int a,b;
-    kineticPriorityQueue<double,less<double>> kpq(n);
+    kineticPriorityQueue<double,less<double>> kpq(n,&lines);
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
@@ -138,3 +141,4 @@ int main()
     res.erase(it,res.end());
     for(auto e:res) cout<<lines[e].a<<' '<<lines[e].b<<'\n';
 }
+#endif

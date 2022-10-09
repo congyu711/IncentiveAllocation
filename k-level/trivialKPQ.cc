@@ -25,22 +25,6 @@ inline double getx(const line &_l1, const line &_l2)
     if(fabs(_l1.a-_l2.a)<1e-5)  return RANGE_MAX;
     return (double)(_l1.b-_l2.b)/(_l1.a-_l2.a);
 }
-class breakpoint
-{
-public:
-    double x;
-    line *l1,*l2;
-    breakpoint(line &_l1,line &_l2)
-    {
-        x=getx(_l1,_l2);
-        l1=&_l1;
-        l2=&_l2;
-    }
-    bool operator<(const breakpoint &b)
-    {
-        return x<b.x;
-    }
-};
 
 /////////////////////////////////////////////////
 // store all lines. KPQ use indices of lines 
@@ -52,6 +36,7 @@ template<class type,class cmp>
 class trivialKPQ
 {
 public:
+    vector<line> *lines;
     bool fin;   // finish--KPQ.advance() label
     unordered_set<int> S;   // store indices of lines
     type t,nextT;
@@ -65,7 +50,8 @@ public:
     virtual void _maintain();
     bool compare(const int,const int);
     trivialKPQ(type _t):t(_t),nextT(-1*_t),top(-1),nextTop(-1),fin(false){}
-    trivialKPQ():trivialKPQ(-RANGE_MAX){}
+    trivialKPQ(vector<line>* p):trivialKPQ(-RANGE_MAX){lines=p;}
+    trivialKPQ():trivialKPQ(-RANGE_MAX){lines=nullptr;}
 };
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_maintain()
@@ -76,7 +62,7 @@ void trivialKPQ<type,cmp>::_maintain()
     for(auto e:S)
     {
         if(e==top)  continue;
-        auto x=getx(lines[top],lines[e]);
+        auto x=getx((*lines)[top],(*lines)[e]);
         if(x>t&&x<RANGE_MAX)
         {
             fin=0;
@@ -99,9 +85,9 @@ void trivialKPQ<type,cmp>::_advance()
 template<class type,class cmp>
 bool trivialKPQ<type,cmp>::compare(const int a,const int b)
 {
-    if(lines[a].gety(t)==lines[b].gety(t))
-        return cmp()(lines[a].a,lines[b].a);
-    return cmp()(lines[a].gety(t),lines[b].gety(t));
+    if((*lines)[a].gety(t)==(*lines)[b].gety(t))
+        return cmp()((*lines)[a].a,(*lines)[b].a);
+    return cmp()((*lines)[a].gety(t),(*lines)[b].gety(t));
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)
@@ -130,7 +116,7 @@ void trivialKPQ<type,cmp>::_delete(int l)
         top=*S.begin();
         for(auto e:S)
         {
-            if(cmp()(lines[e].gety(t),lines[top].gety(t)))
+            if(cmp()((*lines)[e].gety(t),(*lines)[top].gety(t)))
                 top=e;
         }
     }
