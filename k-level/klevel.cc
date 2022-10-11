@@ -10,8 +10,8 @@ using namespace std;
 vector<pair<double, int>> klevel(int k, vector<line> *lines)
 {
     vector<pair<double, int>> res;
-    kineticPriorityQueue<double, less<double>> upper(lines->size(), lines);
-    kineticPriorityQueue<double, greater<double>> lower(lines->size(), lines);
+    kineticPriorityQueue<double, less<double>> upper(k, lines);
+    kineticPriorityQueue<double, greater<double>> lower(lines->size()-k, lines);
     double t = -RANGE_MAX;
     // find k-level for the initial t and init upper&lower
     // can be done in O(n)
@@ -28,16 +28,17 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
     while (1)
     {
         double t0=getx((*lines)[upper.top],(*lines)[lower.top]);
+        if(t0<t)    t0=RANGE_MAX;
         t=min({upper.nextT,lower.nextT,t0});
         if(t==RANGE_MAX)    break;
         if(t==t0)
         {
             int uppermin=upper.top, lowermax=lower.top;
             upper._insert(lowermax);
-            while(upper.t!=t0)  upper._advance();
+            while(upper.t<t0)   upper._advance();
             upper._delete(uppermin);
             lower._insert(uppermin);
-            while(lower.t!=t0)  lower._advance();
+            while(lower.t<t0)   lower._advance();
             lower._delete(lowermax);
             res.push_back(make_pair(upper.t,upper.top));
             while(upper.top==lowermax&&lower.top==uppermin)
