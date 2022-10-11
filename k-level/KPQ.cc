@@ -110,7 +110,6 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_delete(int l)
     Q._insert(P->top);
     _maintain();
 }
-#define __TEST__
 #ifdef __TEST__
 int main()
 {
@@ -129,16 +128,16 @@ int main()
         kpq._insert(i);
     }
     res.push_back(kpq.top);
-    auto pre_t=-1;
-    while (kpq.t!=RANGE_MAX)
+    while (1)
     {
-        pre_t=kpq.t;
         kpq._advance();
-        // if(kpq.t>=RANGE_MAX)  break;
-        res.push_back(kpq.top);
+        if(kpq.t>=RANGE_MAX)  break;
+        if(kpq.top>=0)
+            res.push_back(kpq.top);
     }
     auto it=unique(res.begin(),res.end());
     res.erase(it,res.end());
-    for(auto e:res) cout<<lines[e].a<<' '<<lines[e].b<<'\n';
+    ofstream fout("kpq.out");
+    for(auto e:res) fout<<lines[e].a<<' '<<lines[e].b<<'\n';
 }
 #endif

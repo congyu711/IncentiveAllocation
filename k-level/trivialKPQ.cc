@@ -71,7 +71,7 @@ void trivialKPQ<type,cmp>::_maintain()
     }
     if(nt>t&&nt<RANGE_MAX)  nextT=nt,nextTop=ntp;
     // if(fin==1) then there is no breakpoint right to t;
-    if(fin) nextT=RANGE_MAX,nextTop=-1;
+    if(fin) nextT=RANGE_MAX,nextTop=top;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_advance()
@@ -113,6 +113,10 @@ void trivialKPQ<type,cmp>::_delete(int l)
     // change top
     if(top==l)
     {
+        if(S.empty())
+        {
+            return;
+        }
         top=*S.begin();
         for(auto e:S)
         {

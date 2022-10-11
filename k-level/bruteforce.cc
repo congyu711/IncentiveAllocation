@@ -70,7 +70,8 @@ int main()
         objs[k] = CH_Andrew(objs[k]);
         // while (objs[k].back().v < objs[k].end()[-2].v)
         //     objs[k].pop_back();
-        for(auto e:objs[k]) cout<<e.v<<' '<<e.c <<'\n';
+        ofstream fout("bf.out");
+        for(auto e:objs[k]) fout<<e.v<<' '<<e.c <<'\n';
     }
     // compute the LP dual opt
     // 1. maintain breakpoints for each set of objs
