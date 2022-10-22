@@ -53,6 +53,7 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
     }
     return res;
 }
+#ifdef __TEST_KLEVEL__
 int main()
 {
     ifstream fin("/home/congyu/IncentiveAllocation/k-level/data.in");
@@ -65,7 +66,7 @@ int main()
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
-        lines.push_back(line(a,b));
+        lines.push_back(line(-a,-b));
     }
     auto ans=klevel(20,&lines);
     for(auto e:ans)
@@ -73,3 +74,4 @@ int main()
         cout<<e.first<<' '<<e.second<<endl;
     }
 }
+#endif

@@ -1,5 +1,8 @@
 // for p>=2 ...
+// with k-level
+// k-level use y=ax-b, hence a=-c and b=-v
 #include <bits/stdc++.h>
+#include "../k-level/klevel.cc"
 using namespace std;
 
 class obj
@@ -34,72 +37,9 @@ int main()
             data[i][j].idx = j;
         }
     objs = data;
-    // preprocessing
-    // for every group, draw every object(value,cost) on a 2D plane,
-    // keep those objects lying on the bottom-right convex hull and delete others
-    auto crossproduct = [&](obj st1, obj ed1, obj st2, obj ed2) -> long long
-    { return (ed1.v - st1.v) * (ed2.c - st2.c) -
-             (ed1.c - st1.c) * (ed2.v - st2.v); };
-    auto CH_Andrew = [&](vector<obj> &points) -> vector<obj>
-    {
-        vector<obj> res;
-        // res.push_back(obj(0, 0, -1));
-        sort(points.begin(), points.end(), [&](obj a, obj b) -> bool
-             {
-            if (fabs(a.c - b.c) < 1e-6)
-                return a.v < b.v;
-            return a.c < b.c; });
-        for (int i = 0; i < points.size(); i++)
-        {
-            while (res.size() >= 2 && crossproduct(res.end()[-2], points[i], res.end()[-2],
-                                                   res.end()[-1]) >= 0)
-                res.pop_back();
-            res.push_back(points[i]);
-        }
-        // int _sz=res.size();
-        // for (int i = points.size() - 2; i >= 0; i--)
-        // {
-        //     while (res.size()>=_sz+2 && crossproduct(res.end()[-2], points[i], res.end()[-2],
-        //                                            res.end()[-1]) >= 0)
-        //         res.pop_back();
-        //     res.push_back(points[i]);
-        // }
-        // res.pop_back();
-        return res;
-    };
-    for (int k = 0; k < n; k++)
-    {
-        objs[k].push_back(obj(0,0,-1));
-        objs[k]=CH_Andrew(objs[k]);
-        vector<obj> _CH;
-        vector<vector<bool>> used;
-        for(int i=0;i<m;i++)
-        {
-            vector<bool> b(m,false);
-            b[i]=true;
-            used.push_back(b);
-        }
-        for(int _p=1;_p<p;_p++)
-        {
-            _CH=objs[k];
-            for(auto e:_CH)
-            {
-                if(e.idx<0) continue;
-                for(int i=0;i<used[e.idx].size();i++)
-                {
-                    if(used[e.idx][i])  continue;
-                    auto _u=used[e.idx];
-                    _u[i]=true;
-                    used.push_back(_u);
-                    objs[k].push_back(obj(e.v+data[k][i].v,e.c+data[k][i].c,used.size()-1));
-                }
-            }
-            objs[k]=CH_Andrew(objs[k]);
-        }
-        while (objs[k].back().v < objs[k].end()[-2].v)
-            objs[k].pop_back();
-        
-    }
+
+
+    
     // compute the LP dual opt
     // 1. maintain breakpoints for each set of objs
     // can be done better?

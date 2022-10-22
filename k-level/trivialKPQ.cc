@@ -85,9 +85,9 @@ void trivialKPQ<type,cmp>::_advance()
 template<class type,class cmp>
 bool trivialKPQ<type,cmp>::compare(const int a,const int b)
 {
-    if((*lines)[a].gety(t+1e-5)==(*lines)[b].gety(t+1e-5))
+    if((*lines)[a].gety(t+1e-8)==(*lines)[b].gety(t+1e-8))
         return cmp()((*lines)[a].a,(*lines)[b].a);
-    return cmp()((*lines)[a].gety(t+1e-5),(*lines)[b].gety(t+1e-5));
+    return cmp()((*lines)[a].gety(t+1e-8),(*lines)[b].gety(t+1e-8));
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)

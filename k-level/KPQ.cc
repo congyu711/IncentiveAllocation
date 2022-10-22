@@ -110,7 +110,7 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_delete(int l)
     Q._insert(P->top);
     _maintain();
 }
-#ifdef __TEST__
+#ifdef __TEST_KPQ__
 int main()
 {
     ifstream fin("/home/congyu/IncentiveAllocation/k-level/data.in");

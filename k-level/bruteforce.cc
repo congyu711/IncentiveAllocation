@@ -1,13 +1,4 @@
-/**
- * @file lyftmethod.cpp
- * @author congyu
- * @brief this is another method for the problem in
- * https://eng.lyft.com/how-to-solve-a-linear-optimization-problem-on-incentive-allocation-5a8fb5d04db1
- * @date 2022-08-11
- *
- * @copyright Copyright (c) 2022
- *
- */
+// upper envelope(convex hull)
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -68,6 +59,7 @@ int main()
     for (int k = 0; k < 1; k++)
     {
         objs[k] = CH_Andrew(objs[k]);
+        while(objs[0].end()[-1].v==objs[0].end()[-2].v)    objs[0].pop_back();
         // while (objs[k].back().v < objs[k].end()[-2].v)
         //     objs[k].pop_back();
         ofstream fout("bf.out");
