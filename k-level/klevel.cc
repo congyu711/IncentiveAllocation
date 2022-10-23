@@ -26,6 +26,7 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
     for(int i=k;i<idxs.size();i++)
         lower._insert(idxs[i]);
     auto pushback=[&]()->void{if(res.empty()||res.back().second!=upper.top) res.push_back(make_pair(upper.t,upper.top));};
+    pushback();
     while (1)
     {
         double t0=getx((*lines)[upper.top],(*lines)[lower.top]);
@@ -59,12 +60,13 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
 int main()
 {
     ifstream fin("/home/congyu/IncentiveAllocation/k-level/data.in");
+    ofstream fout("klevel.out");
     fin.ignore(numeric_limits<streamsize>::max(),'\n');
     int n;
     fin>>n;
     vector<int> res;
     // int k=n*0.2;
-    int a,b;
+    double a,b;
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
@@ -73,7 +75,7 @@ int main()
     auto ans=klevel(20,&lines);
     for(auto e:ans)
     {
-        cout<<e.first<<' '<<e.second<<endl;
+        fout<<e.second<<' '<<lines[e.second].a<<' '<<lines[e.second].b<<'\n';
     }
 }
 #endif

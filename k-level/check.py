@@ -2,9 +2,9 @@ import subprocess
 import filecmp
 
 while True:
-    subprocess.Popen("./gen 100000 > data.in && ./bruteforce && ./kpq",shell=True).wait()
+    subprocess.Popen("./gen 50 > data.in && ./klevel-bf && ./klevel",shell=True).wait()
     try:
-        status = filecmp.cmp("kpq.out", "bf.out")
+        status = filecmp.cmp("klevel.out", "klevelbf.out")
         if status:
             print("files are the same")
         else:
