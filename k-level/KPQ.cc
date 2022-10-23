@@ -119,7 +119,7 @@ int main()
     fin>>n;
     vector<int> res;
     // int k=n*0.2;
-    int a,b;
+    double a,b;
     kineticPriorityQueue<double,less<double>> kpq(n,&lines);
     for(int i=0;i<n;i++)
     {

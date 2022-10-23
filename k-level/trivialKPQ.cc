@@ -4,17 +4,17 @@
 // https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.44.9042&rep=rep1&type=pdf
 // section 2.2
 
-#define RANGE_MAX 100000000
+#define RANGE_MAX 1e10
 #include<bits/stdc++.h>
 using namespace std;
 
-typedef pair<int,int> point;
+typedef pair<double,double> point;
 class line
 {
     // y=ax-b
 public:
-    int a,b;
-    line(int _a, int _b):a(_a),b(_b){}
+    double a,b;
+    line(double _a, double _b):a(_a),b(_b){}
     double gety(double x)
     {
         return x*a-b;

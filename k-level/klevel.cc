@@ -53,6 +53,7 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
     }
     return res;
 }
+#define __TEST_KLEVEL__
 #ifdef __TEST_KLEVEL__
 int main()
 {
