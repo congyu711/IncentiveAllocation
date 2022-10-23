@@ -25,6 +25,7 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
         upper._insert(idxs[i]);
     for(int i=k;i<idxs.size();i++)
         lower._insert(idxs[i]);
+    auto pushback=[&]()->void{if(res.empty()||res.back().second!=upper.top) res.push_back(make_pair(upper.t,upper.top));};
     while (1)
     {
         double t0=getx((*lines)[upper.top],(*lines)[lower.top]);
@@ -40,15 +41,15 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
             lower._insert(uppermin);
             while(lower.t<t0)   lower._advance();
             lower._delete(lowermax);
-            res.push_back(make_pair(upper.t,upper.top));
+            pushback();
             while(upper.top==lowermax&&lower.top==uppermin)
             {
                 if(upper.nextT<lower.nextT) upper._advance();
                 else lower._advance();
             }
-            if(upper.top!=lowermax) res.push_back(make_pair(upper.t,upper.top));
+            if(upper.top!=lowermax) pushback();
         }
-        else if(t==upper.nextT) {upper._advance();res.push_back(make_pair(upper.t,upper.top));}
+        else if(t==upper.nextT) {upper._advance();pushback();}
         else lower._advance();
     }
     return res;
@@ -67,7 +68,7 @@ int main()
     for(int i=0;i<n;i++)
     {
         fin>>a>>b;
-        lines.push_back(line(-a,-b));
+        lines.push_back(line(a,b));
     }
     auto ans=klevel(20,&lines);
     for(auto e:ans)
