@@ -65,10 +65,11 @@ void kineticPriorityQueue<type,cmp,binomialHeap>::_advance()
         auto nextpmin=subKPQs[p]->top;
         if(pmin!=nextpmin)
         {
-            Q.t=this->t;
-            Q._maintain();
+            // Q.t=this->t;
+            // Q._maintain();
             Q._delete(pmin);
             Q._insert(nextpmin);
+            while(Q.nextT<this->t)  Q._advance();
         }
     }
     else if(this->t==Q.nextT)

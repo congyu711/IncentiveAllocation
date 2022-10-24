@@ -120,7 +120,7 @@ void trivialKPQ<type,cmp>::_delete(int l)
         top=*S.begin();
         for(auto e:S)
         {
-            if(cmp()((*lines)[e].gety(t),(*lines)[top].gety(t)))
+            if(cmp()((*lines)[e].gety(t+1e-8),(*lines)[top].gety(t+1e-8)))
                 top=e;
         }
     }

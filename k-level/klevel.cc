@@ -36,13 +36,17 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
         if(t==t0)
         {
             int uppermin=upper.top, lowermax=lower.top;
+
             upper._insert(lowermax);
             while(upper.t<t0)   upper._advance();
             upper._delete(uppermin);
+            while(upper.nextT<t0)   upper._advance();
             lower._insert(uppermin);
             while(lower.t<t0)   lower._advance();
             lower._delete(lowermax);
+            while(lower.nextT<t0)   lower._advance();
             pushback();
+            if(min(upper.nextT,lower.nextT)==RANGE_MAX) break;
             while(upper.top==lowermax&&lower.top==uppermin)
             {
                 if(upper.nextT<lower.nextT) upper._advance();
