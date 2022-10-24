@@ -26,7 +26,7 @@ public:
         subKPQs.resize(r,nullptr);
         for(int i=0;i<r;i++)    pq_handlers.push_back(pq.push(make_pair(RANGE_MAX,i)));
         Q=trivialKPQ<type,cmp>(p);
-        if(sz<50)
+        if(sz<200)
         {
             for(int i=0;i<r;i++)
             {

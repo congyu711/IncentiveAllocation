@@ -1,5 +1,9 @@
 #include "KPQ.cc"
 using namespace std;
+#include <chrono>
+// std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+// std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+// std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
 
 /// @brief this function computes (top) k-level of a set of lines
 /// @param k k for k-level
@@ -9,6 +13,7 @@ using namespace std;
 ///         and which line is added to the k-level.
 vector<pair<double, int>> klevel(int k, vector<line> *lines)
 {
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     vector<pair<double, int>> res;
     kineticPriorityQueue<double, less<double>> upper(k, lines);
     kineticPriorityQueue<double, greater<double>> lower(lines->size()-k, lines);
@@ -25,6 +30,8 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
         upper._insert(idxs[i]);
     for(int i=k;i<idxs.size();i++)
         lower._insert(idxs[i]);
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+    std::cout << "init time = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
     auto pushback=[&]()->void{if(res.empty()||res.back().second!=upper.top) res.push_back(make_pair(upper.t,upper.top));};
     pushback();
     while (1)
@@ -51,6 +58,7 @@ vector<pair<double, int>> klevel(int k, vector<line> *lines)
             {
                 if(upper.nextT<lower.nextT) upper._advance();
                 else lower._advance();
+                if(min(upper.nextT,lower.nextT)==RANGE_MAX) return res;
             }
             if(upper.top!=lowermax) pushback();
         }
