@@ -6,3 +6,4 @@
 examples/
 *.log
 k-level/trans.cc
+*.in
