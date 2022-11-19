@@ -57,6 +57,22 @@ int main()
         model.setObjective(obj,GRB_MAXIMIZE);
         model.optimize();
         cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+        vector<pair<int,int>> fracvar;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(xs[i][j].get(GRB_DoubleAttr_X)!=0&&xs[i][j].get(GRB_DoubleAttr_X)!=1.0)
+                {
+                    fracvar.push_back(make_pair(i,j));
+                }
+            }
+        }
+        cout<<"fracvar: "<<fracvar.size()<<'\n';
+        for(auto e:fracvar)
+        {
+            cout<<'('<<e.first<<','<<e.second<<"): "<<xs[e.first][e.second].get(GRB_DoubleAttr_X)<<'\n';
+        }
         // double ans=0.0,cost=0.0;
         // ofstream fout("lp.out");
         // for(int i=0;i<n;i++)

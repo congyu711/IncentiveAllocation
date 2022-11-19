@@ -56,22 +56,19 @@ public:
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_maintain()
 {
-    fin=1;
     int ntp=-1;
     type nt=RANGE_MAX;
     for(auto e:S)
     {
         if(e==top)  continue;
         auto x=getx((*lines)[top],(*lines)[e]);
-        if(x>t&&x<RANGE_MAX)
+        if(x>t&&x<nt)
         {
-            fin=0;
-            if(nt>x)    nt=x,ntp=e;
+            nt=x,ntp=e;
         }
     }
-    if(nt>t&&nt<RANGE_MAX)  nextT=nt,nextTop=ntp;
-    // if(fin==1) then there is no breakpoint right to t;
-    if(fin) nextT=RANGE_MAX,nextTop=top;
+    if(ntp!=-1)    nextT=nt,nextTop=ntp;
+    else nextT=RANGE_MAX,nextTop=top;
 }
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_advance()
@@ -92,7 +89,6 @@ bool trivialKPQ<type,cmp>::compare(const int a,const int b)
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_insert(int l)
 {
-    fin=0;
     S.insert(l);
     // change top
     if(S.size()<2)
@@ -107,7 +103,6 @@ void trivialKPQ<type,cmp>::_insert(int l)
 template<class type,class cmp>
 void trivialKPQ<type,cmp>::_delete(int l)
 {
-    fin=0;
     S.erase(l);
     nextT=RANGE_MAX;
     // change top
