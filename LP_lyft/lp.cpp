@@ -71,7 +71,8 @@ int main()
         cout<<"fracvar: "<<fracvar.size()<<'\n';
         for(auto e:fracvar)
         {
-            cout<<'('<<e.first<<','<<e.second<<"): "<<xs[e.first][e.second].get(GRB_DoubleAttr_X)<<'\n';
+            cout<<'('<<e.first<<','<<e.second<<"): "<<xs[e.first][e.second].get(GRB_DoubleAttr_X)<<' ';
+            cout<<v[e.first][e.second]<<", "<<c[e.first][e.second]<<'\n';
         }
         // double ans=0.0,cost=0.0;
         // ofstream fout("lp.out");
