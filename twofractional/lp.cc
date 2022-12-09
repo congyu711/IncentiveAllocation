@@ -42,7 +42,7 @@ int getrank(const vector<int>& idx)
 int main()
 {
     n=20;B=155;
-    initvectors(n,n);
+    initvectors(n,n/2);
     for(int i=0;i<n;i++)
     {
         v.push_back(gen()%20+10);
