@@ -52,7 +52,7 @@ int main()
     {
         // Create an environment
         GRBEnv env = GRBEnv(true);
-        env.set("LogFile", "lp.log");
+        // env.set("LogFile", "lp.log");
         env.start();
         // Create an empty model
         GRBModel model = GRBModel(env);
@@ -90,6 +90,20 @@ int main()
             {
                 fracvar.push_back(i);
             }
+        }
+        if(fracvar.size()>2)
+        {
+            ofstream ferr("CE.out",ios::app);
+            ferr<<n<<'\n';
+            for(auto e:vecs)
+            {
+                for(auto ee:e)  ferr<<ee<<' ';
+                ferr<<'\n';
+            }
+            for(auto e:v)   ferr<<e<<' ';ferr<<'\n';
+            for(auto e:c)   ferr<<e<<' ';ferr<<'\n';
+            ferr<<B<<endl;
+            return 1;
         }
         cout<<"fracvar: "<<fracvar.size()<<'\n';
         for(auto e:fracvar)
