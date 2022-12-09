@@ -86,7 +86,7 @@ int main()
         for(int i=0;i<n;i++)
         {
             _B+=xs[i].get(GRB_DoubleAttr_X)*c[i];
-            if(xs[i].get(GRB_DoubleAttr_X)!=0&&xs[i].get(GRB_DoubleAttr_X)!=1.0)
+            if(xs[i].get(GRB_DoubleAttr_X)>1e-6&&xs[i].get(GRB_DoubleAttr_X)<1.0-1e-6)
             {
                 fracvar.push_back(i);
             }
@@ -103,6 +103,11 @@ int main()
             for(auto e:v)   ferr<<e<<' ';ferr<<'\n';
             for(auto e:c)   ferr<<e<<' ';ferr<<'\n';
             ferr<<B<<endl;
+            for(auto e:fracvar)
+            {
+                ferr<<'('<<e<<"): "<<xs[e].get(GRB_DoubleAttr_X)<<' ';
+                ferr<<v[e]<<", "<<c[e]<<'\n';
+            }
             return 1;
         }
         cout<<"fracvar: "<<fracvar.size()<<'\n';
