@@ -48,6 +48,40 @@ int main()
         v.push_back(gen()%20+10);
         c.push_back(gen()%20+10);
     }
+    /////////////////////////////////////////////////////
+    // algorithm for LD
+
+    double lambda;
+    auto geta=[&](int i){return v[i]-lambda*c[i];};
+    auto cmp=[&](int a,int b){if(geta(a)==geta(b)) return c[a]<c[b];return geta(a)>geta(b);};
+    vector<int> index;
+    for(int i=0;i<n;i++)    index.push_back(i);
+    double opt=1e9;
+    for(int k1=0;k1<n;k1++)
+    {
+        for(int k2=0;k2<n;k2++)
+        {
+            if(c[k1]==c[k2])    continue;
+            lambda=(v[k1]-v[k2])*1.0/(c[k1]-c[k2])*1.0;
+            if(lambda<0)    continue;
+            sort(index.begin(),index.end(),cmp);
+            vector<int> fs;
+            vector<int> idx;    // idx for getrank()
+            idx.push_back(index[0]);
+            fs.push_back(getrank(idx));
+            double topt=fs[0]*geta(index[0])+B*lambda;
+            for(int i=1;i<n;i++)
+            {
+                if(geta(index[i])<0)    break;
+                idx.push_back(index[i]);
+                fs.push_back(getrank(idx));
+                topt+=(fs[i]-fs[i-1])*geta(index[i]);
+            }
+            opt=min(opt,topt);
+        }
+    }
+    // algorithm for LD end.
+    /////////////////////////////////////////////////////
     try
     {
         // Create an environment
@@ -81,6 +115,7 @@ int main()
         model.setObjective(obj,GRB_MAXIMIZE);
         model.optimize();
         cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+        cout << "LD:  " << opt <<endl;
         double _B=0;
         vector<int> fracvar;
         for(int i=0;i<n;i++)
@@ -91,10 +126,12 @@ int main()
                 fracvar.push_back(i);
             }
         }
-        if(fracvar.size()>2)
+        if(fracvar.size()>2||fabs(opt-model.get(GRB_DoubleAttr_ObjVal))>1e-6)
         {
             ofstream ferr("CE.out",ios::app);
             ferr<<n<<'\n';
+            ferr << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << '\n';
+            ferr << "LD:  " << opt << '\n';
             for(auto e:vecs)
             {
                 for(auto ee:e)  ferr<<ee<<' ';
