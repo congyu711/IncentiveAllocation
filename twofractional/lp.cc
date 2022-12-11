@@ -59,12 +59,14 @@ int main()
     double opt=1e9;
     for(int k1=0;k1<n;k1++)
     {
-        for(int k2=0;k2<n;k2++)
+        for(int k2=k1;k2<n;k2++)
         {
-            if(c[k1]==c[k2])    continue;
-            lambda=(v[k1]-v[k2])*1.0/(c[k1]-c[k2])*1.0;
+            if(k1==k2)  lambda=1.0*v[k1]/c[k1];
+            else if(c[k1]==c[k2])    continue;
+            else lambda=(v[k1]-v[k2])*1.0/(c[k1]-c[k2])*1.0;
             if(lambda<0)    continue;
             sort(index.begin(),index.end(),cmp);
+            if(geta(index[0])<0)    continue;
             vector<int> fs;
             vector<int> idx;    // idx for getrank()
             idx.push_back(index[0]);
@@ -145,7 +147,7 @@ int main()
                 ferr<<'('<<e<<"): "<<xs[e].get(GRB_DoubleAttr_X)<<' ';
                 ferr<<v[e]<<", "<<c[e]<<'\n';
             }
-            return 1;
+            cerr<<"\033[31mlp_opt!=ld_opt\033[0m\n";
         }
         cout<<"fracvar: "<<fracvar.size()<<'\n';
         for(auto e:fracvar)
