@@ -1,43 +1,15 @@
 #include <bits/stdc++.h>
-#include <eigen3/Eigen/Dense>
+#include "laminar.cc"
 #include <gurobi_c++.h>
 using namespace std;
-using namespace Eigen;
 int n; // number of items
 int B; // budget
 
 vector<int> v, c; // v&c.
 vector<vector<int>> vecs;
 mt19937 gen(114514);
+laminar* l;
 
-/////////////////////////////////////////////////////////
-//////////////submodular function////////////////////////
-void initvectors(int nrow, int ncol) // each row is a vector
-{
-    vecs.resize(nrow, vector<int>(ncol));
-    for (auto &v : vecs)
-    {
-        for (auto &e : v)
-        {
-            e = gen() % 32 - 16;
-        }
-    }
-}
-int getrank(const vector<int> &idx)
-{
-    MatrixXd m(vecs[0].size(), idx.size());
-    for (int i = 0; i < idx.size(); i++)
-    {
-        for (int j = 0; j < vecs[0].size(); j++)
-        {
-            m(j, i) = vecs[idx[i]][j];
-        }
-    }
-    FullPivLU<MatrixXd> lu_decomp(m);
-    return (int)lu_decomp.rank();
-}
-//////////////submodular function end////////////////////
-/////////////////////////////////////////////////////////
 class matroidcallback : public GRBCallback
 {
 public:
@@ -50,7 +22,7 @@ protected:
         {
             if(where==GRB_CB_MIPSOL)
             {
-                vector<int> idx;
+                // vector<int> idx;
                 double sumx=0;
                 GRBLinExpr expr=0;
                 vector<double> xval(xs->size());
@@ -58,21 +30,30 @@ protected:
                 {
                     xval[i]=getSolution(xs->at(i));
                 }
-                for(int i=0;i<xs->size();i++)
+                auto vio=l->isIndependent(xval,l->root);
+                if(vio!=nullptr)
                 {
-                    auto c=xval[i];
-                    if(c>0)
+                    for(int i=vio->l;i<vio->r;i++)
                     {
-                        idx.push_back(i);
-                        sumx+=c;
                         expr+=xs->at(i);
                     }
+                    addLazy(expr<=vio->cap);
                 }
-                auto r=getrank(idx);
-                if(sumx>r)
-                {
-                    addLazy(expr<=r);
-                }
+                // for(int i=0;i<xs->size();i++)
+                // {
+                //     auto c=xval[i];
+                //     if(c>0)
+                //     {
+                //         idx.push_back(i);
+                //         sumx+=c;
+                //         expr+=xs->at(i);
+                //     }
+                // }
+                // auto r=getrank(idx);
+                // if(sumx>r)
+                // {
+                //     addLazy(expr<=r);
+                // }
             }
         }
         catch (GRBException e)
@@ -88,15 +69,16 @@ protected:
 };
 int main()
 {
-    n = 2000;
-    B = 15500;
-    initvectors(n, n / 2);
+    n = 200000;
+    B = 155000000;
+    l = new laminar(n);
+    // initvectors(n, n / 2);
     for (int i = 0; i < n; i++)
     {
         v.push_back(gen() % 20 + 10);
-        c.push_back(gen() % 20 + 10);
+        c.push_back(gen() % 200000 + 10);
     }
-
+    cout<<"finish init\n";
     try
     {
         // Create an environment
@@ -114,21 +96,7 @@ int main()
         GRBLinExpr expr = 0, obj = 0;
         matroidcallback cb= matroidcallback(&xs);
         model.setCallback(&cb);
-        // for (int i = 1; i < (1 << n); i++)
-        // {
-        //     vector<int> idx;
-        //     GRBLinExpr submodular = 0;
-        //     bitset<200> bs(i); // !!!
-        //     for (int j = 0; j < n; j++)
-        //     {
-        //         if (bs[j] == 1)
-        //         {
-        //             submodular += xs[j];
-        //             idx.push_back(j);
-        //         }
-        //     }
-        //     model.addConstr(submodular <= getrank(idx));
-        // }
+
         for (int i = 0; i < n; i++)
         {
             expr += c[i] * xs[i];
@@ -141,16 +109,24 @@ int main()
         model.optimize();
         cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
         double sumx=0,_B=0;
-        vector<int> idxs;
+        // vector<int> idxs;
+        vector<double> sol(n);
+        vector<int> frac;
         for(int i=0;i<n;i++)
         {
             _B+=xs[i].get(GRB_DoubleAttr_X)*c[i];
-            sumx+=xs[i].get(GRB_DoubleAttr_X);
-            if(xs[i].get(GRB_DoubleAttr_X)>0)   idxs.push_back(i);
+            sol[i]=xs[i].get(GRB_DoubleAttr_X);
+            if(sol[i]!=0 && sol[i]!=1.0)    frac.push_back(i);
+            // sumx+=xs[i].get(GRB_DoubleAttr_X);
+            // if(xs[i].get(GRB_DoubleAttr_X)>0)   idxs.push_back(i);
         }
         cout<<"_B "<<_B<<endl;
-        cout<<"sumx "<<sumx<<endl;
-        cout<<"rank. "<<getrank(idxs)<<endl;
+        // cout<<"sumx "<<sumx<<endl;
+        // cout<<"rank. "<<getrank(idxs)<<endl;
+        cout<<boolalpha<<"feasible? "<<(l->isIndependent(sol,l->root)==nullptr)<<endl;
+        cout<<"num of fractional value: "<<frac.size()<<'\n';
+        for(auto e:frac)    cout<<sol[e]<<' ';
+        cout<<endl;
     }
     catch (GRBException e)
     {

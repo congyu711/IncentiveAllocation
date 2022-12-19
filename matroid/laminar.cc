@@ -85,26 +85,20 @@ public:
         h->cap=ub-(rand()%10==0?1:0);
         return h->cap;
     }
-    bool isIndependent(const vector<double> &xs, node* h)
+    // return the violated node in the tree of laminar family.
+    node* isIndependent(const vector<double> &xs, node* h)
     {
         double sumx=0;
         for(int i=h->l;i<h->r;i++)
         {
             sumx+=xs[i];
         }
-        if(sumx>h->cap) return false;
+        if(sumx>h->cap) return h;
         for(int i=0;i<h->ch.size();i++)
         {
-            if(isIndependent(xs,h->ch[i])==false)
-                return false;
+            auto res=isIndependent(xs,h->ch[i]);
+            if(res!=nullptr)    return res;
         }
-        return true;
+        return nullptr;
     }
 };
-
-// int main()
-// {
-//     laminar l(5);
-//     cout<<l.isIndependent({1,1,1,1,1},l.root)<<endl;
-//     // l.traverse(l.root);
-// }
