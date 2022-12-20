@@ -69,8 +69,8 @@ protected:
 };
 int main()
 {
-    n = 200;
-    B = 155000;
+    n = 20000;
+    B = 15500000;
     l = new laminar(n);
     // initvectors(n, n / 2);
     for (int i = 0; i < n; i++)
