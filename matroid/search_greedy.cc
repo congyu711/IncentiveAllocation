@@ -54,77 +54,46 @@ int main()
     auto geta=[&](int i){return v[i]-lambda*c[i];};
     auto cmp=[&](int a,int b){if(geta(a)==geta(b)) return c[a]>c[b];return geta(a)>geta(b);};
     auto cmpr=[&](int a,int b){if(geta(a)==geta(b)) return c[a]<c[b];return geta(a)>geta(b);};
-    // double lll;
-    // for(int k1=0;k1<n;k1++)
-    // {
-    //     for(int k2=k1;k2<n;k2++)
-    //     {
-    //         if(k1==k2)  lambda=1.0*v[k1]/c[k1];
-    //         else if(c[k1]==c[k2])    continue;
-    //         else lambda=(v[k1]-v[k2])*1.0/(c[k1]-c[k2])*1.0;
-    //         if(lambda<0)    continue;
-    //         sort(index.begin(),index.end(),cmp);
-    //         if(geta(index[0])<0)    continue;
-    //         vector<int> fs(n,0),idx(n,0);
-    //         idx[index[0]]=1;
-    //         fs[0]=l->getrank(idx,l->root)+1;
-    //         double topt=geta(index[0])*fs[0]+B*lambda;
-
-    //         for(int i=1;i<n;i++)
-    //         {
-    //             if(geta(index[i])<0)    break;
-    //             idx[index[i]]=1;
-    //             fs[i]=1+i+l->getrank(idx,l->root);
-    //             topt+=max(0,fs[i]-fs[i-1])*geta(index[i]);
-    //         }
-    //         // opt=min(opt,topt);
-    //         if(topt<opt)
-    //         {
-    //             lll=lambda;
-    //             opt=topt;
-    //         }
-    //     }
-    // }
-    // cout<<opt<<endl;
-    // cout<<lll<<endl;
-
 
     double _l=0,_r=ub_v,sumc=0;
     int cnt=0;
     while (true)
     {
         double mid=(_l+_r)/2.0;
-        fraction gl=fareyseq(mid-(int)mid,(int)ub_v,(int)ub_c);
+        fraction gl=fareyseq(mid-(int)mid,ub_v,ub_c);
         gl.first+=gl.second*(int)mid;
         lambda=f2d(gl);
 
         sort(index.begin(),index.end(),cmp);
-        vector<int> fs(n,0),idx(n,0);
+        vector<int> fs,idx(n,0);
         for(int i=0;i<n;i++)
         {
             if(geta(index[i])<0)  break;
             idx[index[i]]=1;
-            fs[i]=1+i+l->getrank(idx,l->root);
+            // fs[i]=1+i+l->getrank(idx,l->root);
+            fs.push_back(1+i+l->getrank(idx,l->root));
         }
         sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-        for(int i=1;i<n;i++) 
-            sumc+=max(0,fs[i]-fs[i-1])*c[index[i]];
+        for(int i=1;i<fs.size();i++) 
+            sumc+=(fs[i]-fs[i-1])*c[index[i]];
         if(sumc>=B)
         {
             fs.clear();idx.clear();
-            fs.resize(n,0);idx.resize(n,0);
+            idx.resize(n);
             sort(index.begin(),index.end(),cmpr);
             opt=B*lambda;
             for(int i=0;i<n;i++)
             {
-                if(geta(index[i])<=0)  break;
+                auto tmp=geta(index[i]);
+                if(tmp<=0)  break;
                 idx[index[i]]=1;
-                fs[i]=1+i+l->getrank(idx,l->root);
-                if(i>0) opt+=max(0,fs[i]-fs[i-1])*geta(index[i]);
+                fs.push_back(1+i+l->getrank(idx,l->root));
+                // fs[i]=1+i+l->getrank(idx,l->root);
+                if(i>0) opt+=(fs[i]-fs[i-1])*tmp;
                 else opt+=fs[0]*geta(index[0]);
             }
-            double sumc2=fs[0]*c[index[0]];
-            for(int i=1;i<n;i++)    sumc2+=max(0,fs[i]-fs[i-1])*c[index[i]];
+            double sumc2=(geta(index[0])>0?fs[0]*c[index[0]]:0);
+            for(int i=1;i<fs.size();i++)    sumc2+=(fs[i]-fs[i-1])*c[index[i]];
             if(sumc2<=B)
             {
                 cout<<opt<<endl;
@@ -144,7 +113,7 @@ int main()
         // fs.resize(n,0);idx.resize(n,0);
         // for(int i=0;i<n;i++)
         // {
-        //     if(geta(index[i])<0)  break;
+        //     if(tmp<0)  break;
         //     idx[index[i]]=1;
         //     fs[i]=1+i+l->getrank(idx,l->root);
         // }
