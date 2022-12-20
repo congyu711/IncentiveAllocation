@@ -7,7 +7,7 @@ int B; // budget
 
 vector<int> v, c; // v&c.
 vector<vector<int>> vecs;
-mt19937 gen(114514);
+mt19937 gen(19260817);
 laminar* l;
 
 class matroidcallback : public GRBCallback
@@ -69,8 +69,8 @@ protected:
 };
 int main()
 {
-    n = 200000;
-    B = 155000000;
+    n = 200;
+    B = 155000;
     l = new laminar(n);
     // initvectors(n, n / 2);
     for (int i = 0; i < n; i++)

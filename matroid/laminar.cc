@@ -20,7 +20,7 @@ vector<int> __partition(int n)
 {
     const double pi =  acos(-1.0);
     double x=exp(-pi/sqrt(6*n));
-    mt19937 gen(time(nullptr));
+    mt19937 gen(19260817);
     while (true)
     {
         vector<int> res;
@@ -100,5 +100,21 @@ public:
             if(res!=nullptr)    return res;
         }
         return nullptr;
+    }
+
+    // get the rank of I={i|xs[i]!=0}
+    // rank = |I|+getrank(...)
+    int getrank(const vector<int> &xs, node* h)
+    {
+        int del=0,sumx=0;
+        for(auto e:h->ch)
+        {
+            del+=getrank(xs,e);
+        }
+        for(int i=h->l;i<h->r;i++)
+        {
+            if(xs[i]>1e-6)  sumx++;
+        }
+        return del+min(0,h->cap-sumx-del);
     }
 };
