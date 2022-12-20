@@ -90,6 +90,7 @@ int main()
 
 
     double _l=0,_r=ub_v,sumc=0;
+    int cnt=0;
     while (true)
     {
         double mid=(_l+_r)/2.0;
@@ -131,25 +132,27 @@ int main()
                 cout<<sumc<<' '<<sumc2<<endl;
                 break;
             }
+            else    _l=lambda;
         }
-        
+        else    _r=lambda;
 
-        // binary search part
-        lambda=mid;
-        sort(index.begin(),index.end(),cmp);
-        // vector<int> fs(n,0),idx(n,0);
-        fs.clear();idx.clear();
-        fs.resize(n,0);idx.resize(n,0);
-        for(int i=0;i<n;i++)
-        {
-            if(geta(index[i])<0)  break;
-            idx[index[i]]=1;
-            fs[i]=1+i+l->getrank(idx,l->root);
-        }
-        sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-        for(int i=1;i<n;i++)    sumc+=max(0,fs[i]-fs[i-1])*c[index[i]];
-        if(sumc<B)  _r=mid;
-        else _l=mid;
+        // // binary search part
+        // lambda=mid;
+        // sort(index.begin(),index.end(),cmp);
+        // // vector<int> fs(n,0),idx(n,0);
+        // fs.clear();idx.clear();
+        // fs.resize(n,0);idx.resize(n,0);
+        // for(int i=0;i<n;i++)
+        // {
+        //     if(geta(index[i])<0)  break;
+        //     idx[index[i]]=1;
+        //     fs[i]=1+i+l->getrank(idx,l->root);
+        // }
+        // sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
+        // for(int i=1;i<n;i++)    sumc+=max(0,fs[i]-fs[i-1])*c[index[i]];
+        // if(sumc<B)  _r=mid;
+        // else _l=mid;
+        cnt++;
     }
-    
+    cout<<"iteration: "<<cnt<<endl;
 }
