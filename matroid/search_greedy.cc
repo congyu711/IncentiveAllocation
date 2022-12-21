@@ -33,8 +33,8 @@ fraction fareyseq(double r,int n,int m)
 }
 int main()
 {
-    n = 20000;
-    B = 15500000;
+    n = 200000;
+    B = 155000000;
     l = new laminar(n);
     // initvectors(n, n / 2);
     int ub_v=0,ub_c=0;
@@ -65,35 +65,43 @@ int main()
         lambda=f2d(gl);
 
         sort(index.begin(),index.end(),cmp);
-        vector<int> fs,idx(n,0);
+        vector<int> fs;
+        l->cntclear(l->root);
         for(int i=0;i<n;i++)
         {
             if(geta(index[i])<0)  break;
-            idx[index[i]]=1;
+            // idx[index[i]]=1;
             // fs[i]=1+i+l->getrank(idx,l->root);
-            fs.push_back(1+i+l->getrank(idx,l->root));
+            // fs.push_back(1+i+l->getrank(idx,l->root));
+            fs.push_back(l->deltarank(index[i],l->root));
         }
-        sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-        for(int i=1;i<fs.size();i++) 
-            sumc+=(fs[i]-fs[i-1])*c[index[i]];
+        // sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
+        // for(int i=1;i<fs.size();i++) 
+        //     sumc+=(fs[i]-fs[i-1])*c[index[i]];
+        sumc=0;
+        for(int i=0;i<fs.size();i++)    sumc+=fs[i]*c[index[i]];
         if(sumc>=B)
         {
-            fs.clear();idx.clear();
-            idx.resize(n);
+            l->cntclear(l->root);
+            fs.clear();
             sort(index.begin(),index.end(),cmpr);
             opt=B*lambda;
             for(int i=0;i<n;i++)
             {
                 auto tmp=geta(index[i]);
                 if(tmp<=0)  break;
-                idx[index[i]]=1;
-                fs.push_back(1+i+l->getrank(idx,l->root));
+                // idx[index[i]]=1;
+                // fs.push_back(1+i+l->getrank(idx,l->root));
                 // fs[i]=1+i+l->getrank(idx,l->root);
-                if(i>0) opt+=(fs[i]-fs[i-1])*tmp;
-                else opt+=fs[0]*geta(index[0]);
+                fs.push_back(l->deltarank(index[i],l->root));
+                // if(i>0) opt+=(fs[i]-fs[i-1])*tmp;
+                // else opt+=fs[0]*geta(index[0]);
+                opt+=fs[i]*tmp;
             }
-            double sumc2=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-            for(int i=1;i<fs.size();i++)    sumc2+=(fs[i]-fs[i-1])*c[index[i]];
+            // double sumc2=(geta(index[0])>0?fs[0]*c[index[0]]:0);
+            // for(int i=1;i<fs.size();i++)    sumc2+=(fs[i]-fs[i-1])*c[index[i]];
+            double sumc2=0;
+            for(int i=0;i<fs.size();i++)    sumc2+=fs[i]*c[index[i]];
             if(sumc2<=B)
             {
                 cout<<opt<<endl;
@@ -104,23 +112,6 @@ int main()
             else    _l=lambda;
         }
         else    _r=lambda;
-
-        // // binary search part
-        // lambda=mid;
-        // sort(index.begin(),index.end(),cmp);
-        // // vector<int> fs(n,0),idx(n,0);
-        // fs.clear();idx.clear();
-        // fs.resize(n,0);idx.resize(n,0);
-        // for(int i=0;i<n;i++)
-        // {
-        //     if(tmp<0)  break;
-        //     idx[index[i]]=1;
-        //     fs[i]=1+i+l->getrank(idx,l->root);
-        // }
-        // sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-        // for(int i=1;i<n;i++)    sumc+=max(0,fs[i]-fs[i-1])*c[index[i]];
-        // if(sumc<B)  _r=mid;
-        // else _l=mid;
         cnt++;
     }
     cout<<"iteration: "<<cnt<<endl;

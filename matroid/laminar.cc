@@ -8,7 +8,9 @@ struct node
     int l,r;    // constains [l,r)
     vector<node*>   ch;
     vector<int> p;  // range of each child;
+    vector<int> psum;
     int cap;
+    int cnt;    // a counter for rank computing.
     node(int _l,int _r): l(_l),r(_r){}
     node(int _l,int _r,int _c): l(_l),r(_r),cap(_c){}
 };
@@ -58,8 +60,11 @@ public:
         h->p=__partition(r-l);
         // not going to use the last part;
         int _l=l;
+        h->psum.resize(h->p.size()-1);
         for(int i=0;i<h->p.size()-1;i++)
         {
+            if(i==0)    h->psum[i]=h->p[i];
+            else h->psum[i]=h->psum[i-1]+h->p[i];
             h->ch.push_back(build(l,l+h->p[i]));
             l+=h->p[i];
             if(h->ch.back()==nullptr)   h->ch.pop_back();
@@ -116,5 +121,26 @@ public:
             if(xs[i]>1e-6)  sumx++;
         }
         return del+min(0,h->cap-sumx-del);
+    }
+    void cntclear(node *h)
+    {
+        h->cnt=0;
+        for(auto e:h->ch)   cntclear(e);
+    }
+    // returns the rank change after adding a new item idx
+    int deltarank(int idx, node*h)
+    {
+        if(idx==41)
+        {
+            int c=0;
+            c++;
+        }
+        if(h->cnt==h->cap)   return 0;
+        auto c=upper_bound(h->psum.begin(),h->psum.end(),idx-h->l)-h->psum.begin();
+        if(c==h->psum.size())   {h->cnt++;return 1;}
+        int res=deltarank(idx,h->ch[c]);
+        if(res==0) return 0;
+        h->cnt++;
+        return 1;
     }
 };
