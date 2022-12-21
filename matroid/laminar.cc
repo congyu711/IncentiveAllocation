@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 
 using namespace std;
-
+int mtseed;
 struct node
 {
     int l,r;    // constains [l,r)
@@ -22,7 +22,7 @@ vector<int> __partition(int n)
 {
     const double pi =  acos(-1.0);
     double x=exp(-pi/sqrt(6*n));
-    mt19937 gen(19260817);
+    mt19937 gen(mtseed);
     while (true)
     {
         vector<int> res;

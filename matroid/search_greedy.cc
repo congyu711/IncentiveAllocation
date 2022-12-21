@@ -7,7 +7,7 @@ int B; // budget
 
 vector<int> v, c; // v&c.
 vector<vector<int>> vecs;
-mt19937 gen(19260817);
+mt19937 gen(mtseed);
 laminar* l;
 
 using ll = long long;
@@ -31,10 +31,21 @@ fraction fareyseq(double r,int n,int m)
         else b=c;
     }
 }
-int main()
+int main(int argc, char** argv)
 {
-    n = 200000;
-    B = 155000000;
+    // n = 200000;
+    // B = 155000000;
+    if(argc!=4)
+    {
+        cerr<<"./xxx seed n B\n";
+        return 1;
+    }
+    else
+    {
+        mtseed=atoi(argv[1]);
+        n=atoi(argv[2]);
+        B=atoi(argv[3]);
+    }
     l = new laminar(n);
     // initvectors(n, n / 2);
     int ub_v=0,ub_c=0;
@@ -52,8 +63,8 @@ int main()
     for(int i=0;i<n;i++) index.push_back(i);
     double opt=1e9,lambda=0;
     auto geta=[&](int i){return v[i]-lambda*c[i];};
-    auto cmp=[&](int a,int b){if(geta(a)==geta(b)) return c[a]>c[b];return geta(a)>geta(b);};
-    auto cmpr=[&](int a,int b){if(geta(a)==geta(b)) return c[a]<c[b];return geta(a)>geta(b);};
+    auto cmp=[&](int a,int b){if(fabs(geta(a)-geta(b))<1e-6) return c[a]>c[b];return geta(a)>geta(b);};
+    auto cmpr=[&](int a,int b){if(fabs(geta(a)-geta(b))<1e-6) return c[a]<c[b];return geta(a)>geta(b);};
 
     double _l=0,_r=ub_v,sumc=0;
     int cnt=0;
@@ -89,7 +100,7 @@ int main()
             for(int i=0;i<n;i++)
             {
                 auto tmp=geta(index[i]);
-                if(tmp<=0)  break;
+                if(tmp<1e-6)  break;
                 // idx[index[i]]=1;
                 // fs.push_back(1+i+l->getrank(idx,l->root));
                 // fs[i]=1+i+l->getrank(idx,l->root);
