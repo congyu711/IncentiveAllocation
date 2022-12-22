@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
 #include "laminar.cc"
 #include <gurobi_c++.h>
+#include <chrono>
 using namespace std;
+using namespace chrono;
 int n; // number of items
 int B; // budget
 
@@ -89,7 +91,8 @@ int main(int argc, char** argv)
         v.push_back(gen() % 20 + 10);
         c.push_back(gen() % 200000 + 10);
     }
-    cout<<"finish init\n";
+    // cout<<"finish init\n";
+    auto st=system_clock::now();
     try
     {
         // Create an environment
@@ -98,6 +101,7 @@ int main(int argc, char** argv)
         env.start();
         // Create an empty model
         GRBModel model = GRBModel(env);
+        model.getEnv().set(GRB_IntParam_OutputFlag, 0);
         model.set(GRB_IntParam_LazyConstraints, 1);
         vector<GRBVar> xs;
         for (int i = 0; i < n; i++)
@@ -118,30 +122,32 @@ int main(int argc, char** argv)
         obj-=rdt;
         model.setObjective(obj, GRB_MAXIMIZE);
         model.optimize();
-        cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
-        double sumx=0,_B=0;
-        // vector<int> idxs;
-        vector<double> sol(n);
-        vector<int> frac;
-        for(int i=0;i<n;i++)
-        {
-            _B+=xs[i].get(GRB_DoubleAttr_X)*c[i];
-            sol[i]=xs[i].get(GRB_DoubleAttr_X);
-            if(sol[i]!=0 && sol[i]!=1.0)    frac.push_back(i);
-            // sumx+=xs[i].get(GRB_DoubleAttr_X);
-            // if(xs[i].get(GRB_DoubleAttr_X)>0)   idxs.push_back(i);
-        }
-        cout<<"_B "<<_B<<endl;
-        // cout<<"sumx "<<sumx<<endl;
-        // cout<<"rank. "<<getrank(idxs)<<endl;
-        cout<<boolalpha<<"feasible? "<<(l->isIndependent(sol,l->root)==nullptr)<<endl;
-        cout<<"num of fractional value: "<<frac.size()<<'\n';
-        for(auto e:frac)    cout<<sol[e]<<' ';
-        cout<<endl;
+        cout << model.get(GRB_DoubleAttr_ObjVal) << ' ';
+        // double sumx=0,_B=0;
+        // // vector<int> idxs;
+        // vector<double> sol(n);
+        // vector<int> frac;
+        // for(int i=0;i<n;i++)
+        // {
+        //     _B+=xs[i].get(GRB_DoubleAttr_X)*c[i];
+        //     sol[i]=xs[i].get(GRB_DoubleAttr_X);
+        //     if(sol[i]!=0 && sol[i]!=1.0)    frac.push_back(i);
+        //     // sumx+=xs[i].get(GRB_DoubleAttr_X);
+        //     // if(xs[i].get(GRB_DoubleAttr_X)>0)   idxs.push_back(i);
+        // }
+        // cout<<"_B "<<_B<<endl;
+        // // cout<<"sumx "<<sumx<<endl;
+        // // cout<<"rank. "<<getrank(idxs)<<endl;
+        // cout<<boolalpha<<"feasible? "<<(l->isIndependent(sol,l->root)==nullptr)<<endl;
+        // cout<<"num of fractional value: "<<frac.size()<<'\n';
+        // for(auto e:frac)    cout<<sol[e]<<' ';
+        // cout<<endl;
     }
     catch (GRBException e)
     {
         cerr << e.getErrorCode() << '\n';
         cerr << e.getMessage() << '\n';
     }
+    auto ed=system_clock::now();
+    cout<<double(duration_cast<microseconds>(ed - st).count())*microseconds::period::num / microseconds::period::den<<endl;
 }

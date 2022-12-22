@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
 #include "laminar.cc"
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
 int n; // number of items
 int B; // budget
 
@@ -56,8 +58,9 @@ int main(int argc, char** argv)
         ub_v=max(ub_v,v.back());
         ub_c=max(ub_c,c.back());
     }
-    cout<<"finish init\n";
+    // cout<<"finish init\n";
 
+    auto st=system_clock::now();
 
     vector<int> index;
     for(int i=0;i<n;i++) index.push_back(i);
@@ -68,6 +71,7 @@ int main(int argc, char** argv)
 
     double _l=0,_r=ub_v,sumc=0;
     int cnt=0;
+    fraction pgl=make_pair(-1,-1);
     while (true)
     {
         double mid=(_l+_r)/2.0;
@@ -81,17 +85,11 @@ int main(int argc, char** argv)
         for(int i=0;i<n;i++)
         {
             if(geta(index[i])<0)  break;
-            // idx[index[i]]=1;
-            // fs[i]=1+i+l->getrank(idx,l->root);
-            // fs.push_back(1+i+l->getrank(idx,l->root));
             fs.push_back(l->deltarank(index[i],l->root));
         }
-        // sumc=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-        // for(int i=1;i<fs.size();i++) 
-        //     sumc+=(fs[i]-fs[i-1])*c[index[i]];
         sumc=0;
         for(int i=0;i<fs.size();i++)    sumc+=fs[i]*c[index[i]];
-        if(sumc>=B)
+        if(sumc>=B||pgl==gl)
         {
             l->cntclear(l->root);
             fs.clear();
@@ -100,30 +98,26 @@ int main(int argc, char** argv)
             for(int i=0;i<n;i++)
             {
                 auto tmp=geta(index[i]);
-                if(tmp<1e-6)  break;
-                // idx[index[i]]=1;
-                // fs.push_back(1+i+l->getrank(idx,l->root));
-                // fs[i]=1+i+l->getrank(idx,l->root);
+                if(tmp<1e-4)  break;
                 fs.push_back(l->deltarank(index[i],l->root));
-                // if(i>0) opt+=(fs[i]-fs[i-1])*tmp;
-                // else opt+=fs[0]*geta(index[0]);
                 opt+=fs[i]*tmp;
             }
-            // double sumc2=(geta(index[0])>0?fs[0]*c[index[0]]:0);
-            // for(int i=1;i<fs.size();i++)    sumc2+=(fs[i]-fs[i-1])*c[index[i]];
             double sumc2=0;
             for(int i=0;i<fs.size();i++)    sumc2+=fs[i]*c[index[i]];
-            if(sumc2<=B)
+            if(sumc2<=B||pgl==gl)
             {
-                cout<<opt<<endl;
-                cout<<lambda<<endl;
-                cout<<sumc<<' '<<sumc2<<endl;
+                cout<<opt<<' ';
+                // cout<<lambda<<endl;
+                // cout<<sumc<<' '<<sumc2<<endl;
                 break;
             }
             else    _l=lambda;
         }
         else    _r=lambda;
         cnt++;
+        pgl=gl;
     }
-    cout<<"iteration: "<<cnt<<endl;
+    // cout<<"iteration: "<<cnt<<endl;
+    auto ed=system_clock::now();
+    cout<<double(duration_cast<microseconds>(ed - st).count())*microseconds::period::num / microseconds::period::den<<endl;
 }
