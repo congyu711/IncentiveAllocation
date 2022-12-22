@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     // initvectors(n, n / 2);
     for (int i = 0; i < n; i++)
     {
-        v.push_back(gen() % 20 + 10);
+        v.push_back(gen() % 20000 + 10);
         c.push_back(gen() % 200000 + 10);
     }
     // cout<<"finish init\n";
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
         obj-=rdt;
         model.setObjective(obj, GRB_MAXIMIZE);
         model.optimize();
-        cout << model.get(GRB_DoubleAttr_ObjVal) << ' ';
+        cout << model.get(GRB_DoubleAttr_ObjVal) << ", ";
         // double sumx=0,_B=0;
         // // vector<int> idxs;
         // vector<double> sol(n);

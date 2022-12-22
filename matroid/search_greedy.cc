@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     int ub_v=0,ub_c=0;
     for (int i = 0; i < n; i++)
     {
-        v.push_back(gen() % 20 + 10);
+        v.push_back(gen() % 20000 + 10);
         c.push_back(gen() % 200000 + 10);
         ub_v=max(ub_v,v.back());
         ub_c=max(ub_c,c.back());
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
             for(int i=0;i<n;i++)
             {
                 auto tmp=geta(index[i]);
-                if(tmp<1e-4)  break;
+                if(tmp<1e-6)  break;
                 fs.push_back(l->deltarank(index[i],l->root));
                 opt+=fs[i]*tmp;
             }
@@ -106,7 +106,7 @@ int main(int argc, char** argv)
             for(int i=0;i<fs.size();i++)    sumc2+=fs[i]*c[index[i]];
             if(sumc2<=B||pgl==gl)
             {
-                cout<<opt<<' ';
+                cout<<opt<<", ";
                 // cout<<lambda<<endl;
                 // cout<<sumc<<' '<<sumc2<<endl;
                 break;
