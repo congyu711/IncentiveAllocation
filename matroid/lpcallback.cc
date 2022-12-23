@@ -97,11 +97,11 @@ int main(int argc, char** argv)
     {
         // Create an environment
         GRBEnv env = GRBEnv(true);
+        env.set(GRB_IntParam_OutputFlag, 0);
         // env.set("LogFile", "lp.log");
         env.start();
         // Create an empty model
         GRBModel model = GRBModel(env);
-        model.getEnv().set(GRB_IntParam_OutputFlag, 0);
         model.set(GRB_IntParam_LazyConstraints, 1);
         vector<GRBVar> xs;
         for (int i = 0; i < n; i++)
