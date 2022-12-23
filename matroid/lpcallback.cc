@@ -9,7 +9,6 @@ int B; // budget
 
 vector<int> v, c; // v&c.
 vector<vector<int>> vecs;
-mt19937 gen(mtseed);
 laminar* l;
 
 class matroidcallback : public GRBCallback
@@ -83,6 +82,7 @@ int main(int argc, char** argv)
         mtseed=atoi(argv[1]);
         n=atoi(argv[2]);
         B=atoi(argv[3]);
+        gen.seed(mtseed);
     }
     l = new laminar(n);
     // initvectors(n, n / 2);

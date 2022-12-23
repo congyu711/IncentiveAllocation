@@ -1,8 +1,8 @@
 import os
 import random
 
-n = 200000
-B = 155000000
+n = 20000
+B = 15500000
 for i in range(5):
     seed = random.randint(0,123123)
     print(seed)
