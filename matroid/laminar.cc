@@ -67,7 +67,7 @@ public:
             else h->psum[i]=h->psum[i-1]+h->p[i];
             h->ch.push_back(build(l,l+h->p[i]));
             l+=h->p[i];
-            if(h->ch.back()==nullptr)   h->ch.pop_back();
+            // if(h->ch.back()==nullptr)   h->ch.pop_back();
         }
         return h;
     }
